@@ -65,9 +65,9 @@
 
 <script setup lang="ts">
 import type { Question } from '@/types/quiz'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getDifficultyColor } from '@/utils/quiz'
+import { getDifficultyColor, validateQuestionAnswer } from '@/utils/quiz'
 
 const { t } = useI18n()
 
@@ -78,12 +78,19 @@ const props = defineProps<{
   isAnswerSubmitted: boolean
   currentQuestionOptions: string[]
   isQuizOver: boolean
+  quizId: string
 }>()
 
 const selectedAnswers =
   defineModel<Question['correctAnswers']>('selectedAnswers')
 
-const isSingleChoice = computed(() => props.currentQuestion?.type === 'single')
+const validationResult = ref<{
+  isCorrect: boolean
+  color: string
+  icon: string
+  correctAnswers: number[]
+  explanation: string
+} | null>(null)
 
 // Computed property for single choice radio group binding
 const singleChoiceValue = computed({
@@ -94,6 +101,41 @@ const singleChoiceValue = computed({
   },
 })
 
+// Watch for answer submission to validate
+watch(
+  () => [props.isAnswerSubmitted, selectedAnswers.value],
+  async ([isSubmitted, answers]) => {
+    if (
+      isSubmitted &&
+      answers &&
+      Array.isArray(answers) &&
+      answers.length > 0 &&
+      props.currentQuestion
+    ) {
+      try {
+        const result = await validateQuestionAnswer(
+          props.quizId,
+          props.currentQuestion.id,
+          answers
+        )
+        validationResult.value = result
+      } catch (error) {
+        console.error('Error validating answer:', error)
+        validationResult.value = {
+          isCorrect: false,
+          color: 'error',
+          icon: 'mdi-alert-circle',
+          correctAnswers: [],
+          explanation: 'Error occurred while validating answer.',
+        }
+      }
+    } else if (!isSubmitted) {
+      validationResult.value = null
+    }
+  },
+  { immediate: true }
+)
+
 const getOptionState = (index: number) => {
   if (!props.isAnswerSubmitted) {
     return {
@@ -103,10 +145,33 @@ const getOptionState = (index: number) => {
     }
   }
 
+  // Use validation result if available
+  if (validationResult.value) {
+    const isCorrect = validationResult.value.correctAnswers.includes(index)
+    const isSelected = selectedAnswers.value?.includes(index) || false
+
+    return {
+      color: isCorrect
+        ? 'success'
+        : isSelected && !isCorrect
+          ? 'error'
+          : 'primary',
+      classes: isCorrect
+        ? 'correct-answer'
+        : isSelected && !isCorrect
+          ? 'incorrect-answer'
+          : '',
+      textClasses: isCorrect
+        ? 'text-success font-weight-bold'
+        : isSelected && !isCorrect
+          ? 'text-error font-weight-bold'
+          : '',
+    }
+  }
+
+  // Fallback to original logic
   const isCorrect = props.currentQuestion?.correctAnswers.includes(index)
-  const isSelected = isSingleChoice.value
-    ? selectedAnswers.value?.includes(index) || false
-    : selectedAnswers.value?.includes(index) || false
+  const isSelected = selectedAnswers.value?.includes(index) || false
 
   return {
     color: isCorrect
@@ -196,5 +261,13 @@ const toggleAnswer = (index: number, checked: boolean | null) => {
 .v-checkbox.incorrect-answer {
   background-color: rgba(244, 67, 54, 0.1);
   border-radius: 8px;
+}
+
+.explanation-box {
+  background-color: rgba(var(--v-theme-surface), 0.8);
+  border-left: 4px solid rgb(var(--v-theme-primary));
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 16px;
 }
 </style>

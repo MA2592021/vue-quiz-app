@@ -25,6 +25,7 @@
           :isAnswerSubmitted="isAnswerSubmitted"
           :currentQuestionOptions="currentQuestionOptions"
           :isQuizOver="isQuizOver"
+          :quizId="quizId"
         />
       </div>
 
@@ -47,7 +48,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import type { Question, Quiz, QuizResult } from '../types/quiz'
 import { useSecureTimer } from '../utils/timer'
-import { getQuizById } from '@/utils/quiz'
+import { getQuizById, validateQuestionAnswer } from '@/utils/quiz'
 import { saveToStorage } from '@/utils/storage'
 import QuizQuestion from '@/components/QuizQuestion.vue'
 import NavigationButtons from '@/components/NavigationButtons.vue'
@@ -118,21 +119,23 @@ const isNotLastQuestion = computed(() => {
 
 const isQuizOver = computed(() => isTimeUp())
 
-const validateAnswer = () => {
-  if (!currentQuestion.value) return false
+// Removed validateAnswer function - now using validateQuestionAnswer from utils
 
-  const userAnswers = [...selectedAnswers.value].sort()
-  const correctAnswers = [...currentQuestion.value.correctAnswers].sort()
-  return (
-    userAnswers.length === correctAnswers.length &&
-    userAnswers.every((ans, index) => ans === correctAnswers[index])
-  )
-}
-
-const submitAnswer = () => {
+const submitAnswer = async () => {
   if (!isAnswerSelected.value) return
 
-  isAnswerCorrect.value = validateAnswer()
+  try {
+    const result = await validateQuestionAnswer(
+      props.quizId,
+      currentQuestion.value!.id,
+      selectedAnswers.value
+    )
+    isAnswerCorrect.value = result.isCorrect
+  } catch (error) {
+    console.error('Error validating answer:', error)
+    isAnswerCorrect.value = false
+  }
+
   isAnswerSubmitted.value = true
   // Save the answer
   answers.value[currentQuestionIndex.value] = [...selectedAnswers.value]
@@ -196,7 +199,7 @@ const resetAnswerState = () => {
 function calculateCorrectAnswers() {
   return answers.value.filter((answer, index) => {
     const question = quiz.value?.questions[index]
-    if (!question) return false
+    if (!question || !answer) return false
     const userAnswers = answer as Question['correctAnswers']
     const correctAnswers = question.correctAnswers
     return (

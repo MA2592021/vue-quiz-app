@@ -314,3 +314,161 @@ export function validateQuiz(quiz: any): quiz is Quiz {
 
   return true
 }
+
+/**
+ * Validate if the given answers are correct for a specific question
+ */
+export function validateAnswer(question: any, userAnswers: number[]): boolean {
+  if (
+    !question ||
+    !Array.isArray(question.correctAnswers) ||
+    !Array.isArray(userAnswers)
+  ) {
+    return false
+  }
+
+  // Sort both arrays to ensure order doesn't matter
+  const sortedCorrectAnswers = [...question.correctAnswers].sort(
+    (a, b) => a - b
+  )
+  const sortedUserAnswers = [...userAnswers].sort((a, b) => a - b)
+
+  // Check if arrays have the same length and content
+  if (sortedCorrectAnswers.length !== sortedUserAnswers.length) {
+    return false
+  }
+
+  return sortedCorrectAnswers.every(
+    (answer, index) => answer === sortedUserAnswers[index]
+  )
+}
+
+/**
+ * Get result icon based on whether the answer is correct
+ */
+export function getResultIcon(isCorrect: boolean): string {
+  return isCorrect ? 'mdi-check-circle' : 'mdi-close-circle'
+}
+
+/**
+ * Get result color based on whether the answer is correct
+ */
+export function getResultColor(isCorrect: boolean): string {
+  return isCorrect ? 'success' : 'error'
+}
+
+/**
+ * Main function to validate answers and get result information
+ * @param quizId - The ID of the quiz
+ * @param questionId - The ID of the question
+ * @param userAnswers - Array of user's selected answer indices
+ * @returns Object containing validation result, color, and icon
+ */
+export async function validateQuestionAnswer(
+  quizId: string,
+  questionId: number,
+  userAnswers: number[]
+): Promise<{
+  isCorrect: boolean
+  color: string
+  icon: string
+  correctAnswers: number[]
+  explanation: string
+}> {
+  try {
+    const quiz = await getQuizById(quizId)
+    if (!quiz) {
+      throw new Error(`Quiz with ID ${quizId} not found`)
+    }
+
+    const question = quiz.questions.find((q) => q.id === questionId)
+    if (!question) {
+      throw new Error(
+        `Question with ID ${questionId} not found in quiz ${quizId}`
+      )
+    }
+
+    const isCorrect = validateAnswer(question, userAnswers)
+    const color = getResultColor(isCorrect)
+    const icon = getResultIcon(isCorrect)
+
+    return {
+      isCorrect,
+      color,
+      icon,
+      correctAnswers: question.correctAnswers,
+      explanation: question.explanation || 'No explanation provided.',
+    }
+  } catch (error) {
+    console.error('Error validating question answer:', error)
+    return {
+      isCorrect: false,
+      color: 'error',
+      icon: 'mdi-alert-circle',
+      correctAnswers: [],
+      explanation: 'Error occurred while validating answer.',
+    }
+  }
+}
+
+/**
+ * Get detailed answer validation with additional information
+ */
+export async function getDetailedAnswerValidation(
+  quizId: string,
+  questionId: number,
+  userAnswers: number[]
+): Promise<{
+  isCorrect: boolean
+  color: string
+  icon: string
+  correctAnswers: number[]
+  userAnswers: number[]
+  explanation: string
+  question: string
+  options: string[]
+  isMultipleChoice: boolean
+}> {
+  try {
+    const quiz = await getQuizById(quizId)
+    if (!quiz) {
+      throw new Error(`Quiz with ID ${quizId} not found`)
+    }
+
+    const question = quiz.questions.find((q) => q.id === questionId)
+    if (!question) {
+      throw new Error(
+        `Question with ID ${questionId} not found in quiz ${quizId}`
+      )
+    }
+
+    const isCorrect = validateAnswer(question, userAnswers)
+    const color = getResultColor(isCorrect)
+    const icon = getResultIcon(isCorrect)
+
+    return {
+      isCorrect,
+      color,
+      icon,
+      correctAnswers: question.correctAnswers,
+      userAnswers,
+      explanation: question.explanation || 'No explanation provided.',
+      question: question.question,
+      options: question.options,
+      isMultipleChoice: question.type === 'multiple',
+    }
+  } catch (error) {
+    console.error('Error getting detailed answer validation:', error)
+    return {
+      isCorrect: false,
+      color: 'error',
+      icon: 'mdi-alert-circle',
+      correctAnswers: [],
+      userAnswers,
+      explanation: 'Error occurred while validating answer.',
+      question: '',
+      options: [],
+      isMultipleChoice: false,
+    }
+  }
+}

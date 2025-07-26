@@ -1,87 +1,123 @@
 {
   "id": "javascript-fundamentals",
+  "quizId": "javascript-fundamentals",
   "language": "ar",
-  "title": "أساسيات جافا سكريبت",
-  "description": "اختبر فهمك لأساسيات جافا سكريبت",
+  "title": "أساسيات JavaScript",
+  "description": "اختبر فهمك لأساسيات JavaScript",
   "categories": ["programming"],
   "difficulty": "beginner",
   "questions": [
     {
       "id": 1,
       "type": "single",
-      "question": "أي كلمة مفتاحية تستخدم لإعلان ثابت في جافا سكريبت؟",
-      "options": ["var", "let", "const", "define"],
-      "correctAnswers": [2],
+      "question": "أي كلمة مفتاحية تستخدم لإعلان ثابت في JavaScript؟",
+      "options": [
+        { "id": "answer_1_0", "text": "var" },
+        { "id": "answer_1_1", "text": "let" },
+        { "id": "answer_1_2", "text": "const" },
+        { "id": "answer_1_3", "text": "define" }
+      ],
+      "correctAnswerIds": ["answer_1_2"],
       "difficulty": "beginner",
-      "explanation": "كلمة `const` المفتاحية تستخدم لإعلان ثابت في جافا سكريبت. وهي مشابهة لـ `let`، لكن قيمة الثابت لا يمكن تغييرها بعد إعلانها."
+      "explanation": "كلمة `const` المفتاحية تستخدم لإعلان ثابت في JavaScript. وهي مشابهة لـ `let`، لكن قيمة الثابت لا يمكن تغييرها بعد إعلانها."
     },
     {
       "id": 2,
       "type": "single",
-      "question": "ما هو نتيجة `typeof NaN`؟",
-      "options": ["number", "NaN", "undefined", "object"],
-      "correctAnswers": [0],
+      "question": "ما نتيجة `typeof NaN`؟",
+      "options": [
+        { "id": "answer_2_0", "text": "number" },
+        { "id": "answer_2_1", "text": "NaN" },
+        { "id": "answer_2_2", "text": "undefined" },
+        { "id": "answer_2_3", "text": "object" }
+      ],
+      "correctAnswerIds": ["answer_2_0"],
       "difficulty": "intermediate",
-      "explanation": "`typeof NaN` هو `number`. NaN هي قيمة خاصة في جافا سكريبت تمثل قيمة ليست رقماً."
+      "explanation": "`typeof NaN` هو `number`. NaN هي قيمة خاصة في JavaScript تمثل قيمة ليست رقماً."
     },
     {
       "id": 3,
       "type": "multiple",
-      "question": "أي من التالي هي أنواع البيانات البدائية في جافا سكريبت؟",
-      "options": ["String", "Object", "Number", "Boolean"],
-      "correctAnswers": [0, 2, 3],
+      "question": "أي من التالي هي أنواع بيانات بدائية في JavaScript؟",
+      "options": [
+        { "id": "answer_3_0", "text": "String" },
+        { "id": "answer_3_1", "text": "Object" },
+        { "id": "answer_3_2", "text": "Number" },
+        { "id": "answer_3_3", "text": "Boolean" }
+      ],
+      "correctAnswerIds": ["answer_3_0", "answer_3_2", "answer_3_3"],
       "difficulty": "intermediate",
-      "explanation": "`String` و `Number` و `Boolean` هي أنواع البيانات البدائية في جافا سكريبت. وهي ليست كائنات."
+      "explanation": "`String` و `Number` و `Boolean` هي أنواع بيانات بدائية في JavaScript. وهي ليست كائنات."
     },
     {
       "id": 4,
       "type": "single",
-      "question": "ما هو الغرض من `JSON.stringify()` في جافا سكريبت؟",
+      "question": "ما الغرض من `JSON.stringify()` في JavaScript؟",
       "options": [
-        "تحويل سلسلة نصية إلى JSON",
-        "تحليل JSON إلى كائن جافا سكريبت",
-        "تحويل كائن جافا سكريبت إلى سلسلة JSON",
-        "تنسيق رقم إلى سلسلة نصية"
+        { "id": "answer_4_0", "text": "تحويل سلسلة نصية إلى JSON" },
+        { "id": "answer_4_1", "text": "تحليل JSON إلى كائن JavaScript" },
+        { "id": "answer_4_2", "text": "تحويل كائن JavaScript إلى سلسلة JSON" },
+        { "id": "answer_4_3", "text": "تنسيق رقم إلى سلسلة نصية" }
       ],
-      "correctAnswers": [2],
+      "correctAnswerIds": ["answer_4_2"],
       "difficulty": "beginner",
-      "explanation": "`JSON.stringify()` يستخدم لتحويل كائن جافا سكريبت إلى سلسلة JSON."
+      "explanation": "`JSON.stringify()` يستخدم لتحويل كائن JavaScript إلى سلسلة JSON."
     },
     {
       "id": 5,
       "type": "multiple",
       "question": "أي من طرق المصفوفة لا تعدل المصفوفة الأصلية؟",
-      "options": ["map()", "filter()", "push()", "slice()"],
-      "correctAnswers": [0, 1, 3],
+      "options": [
+        { "id": "answer_5_0", "text": "map()" },
+        { "id": "answer_5_1", "text": "filter()" },
+        { "id": "answer_5_2", "text": "push()" },
+        { "id": "answer_5_3", "text": "slice()" }
+      ],
+      "correctAnswerIds": ["answer_5_0", "answer_5_1", "answer_5_3"],
       "difficulty": "advanced",
       "explanation": "`map()` و `filter()` و `slice()` هي طرق مصفوفة لا تعدل المصفوفة الأصلية."
     },
     {
       "id": 6,
       "type": "single",
-      "question": "ما هو مخرجات `typeof null` في جافا سكريبت؟",
-      "options": ["null", "undefined", "object", "function"],
-      "correctAnswers": [2],
+      "question": "ما نتيجة `typeof null` في JavaScript؟",
+      "options": [
+        { "id": "answer_6_0", "text": "null" },
+        { "id": "answer_6_1", "text": "undefined" },
+        { "id": "answer_6_2", "text": "object" },
+        { "id": "answer_6_3", "text": "function" }
+      ],
+      "correctAnswerIds": ["answer_6_2"],
       "difficulty": "intermediate",
-      "explanation": "`typeof null` هو `object`. Null هي قيمة خاصة في جافا سكريبت تمثل قيمة ليست كائناً."
+      "explanation": "`typeof null` هو `object`. Null هي قيمة خاصة في JavaScript تمثل قيمة ليست كائناً."
     },
     {
       "id": 7,
       "type": "single",
       "question": "أي طريقة يمكن استخدامها لتحويل سلسلة نصية إلى عدد صحيح؟",
-      "options": ["Number()", "parseInt()", "parseFloat()", "toInteger()"],
-      "correctAnswers": [1],
+      "options": [
+        { "id": "answer_7_0", "text": "Number()" },
+        { "id": "answer_7_1", "text": "parseInt()" },
+        { "id": "answer_7_2", "text": "parseFloat()" },
+        { "id": "answer_7_3", "text": "toInteger()" }
+      ],
+      "correctAnswerIds": ["answer_7_1"],
       "difficulty": "beginner",
-      "explanation": "`parseInt()` تستخدم لتحويل سلسلة نصية إلى عدد صحيح."
+      "explanation": "`parseInt()` يستخدم لتحويل سلسلة نصية إلى عدد صحيح."
     },
     {
       "id": 8,
       "type": "single",
-      "question": "أي من هذه القيم تعتبر falsy في جافا سكريبت؟",
-      "options": ["0", "false", "null", "جميع ما سبق"],
-      "correctAnswers": [3],
+      "question": "أي من هذه القيم هي falsy في JavaScript؟",
+      "options": [
+        { "id": "answer_8_0", "text": "0" },
+        { "id": "answer_8_1", "text": "false" },
+        { "id": "answer_8_2", "text": "null" },
+        { "id": "answer_8_3", "text": "جميع ما سبق" }
+      ],
+      "correctAnswerIds": ["answer_8_3"],
       "difficulty": "beginner",
-      "explanation": "`0` و `false` و `null` هي قيم falsy في جافا سكريبت."
+      "explanation": "`0` و `false` و `null` هي قيم falsy في JavaScript."
     }
   ]
 }

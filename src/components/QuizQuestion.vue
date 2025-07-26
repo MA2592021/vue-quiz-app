@@ -25,17 +25,17 @@
       :disabled="isAnswerSubmitted || isQuizOver"
     >
       <v-radio
-        v-for="(option, index) in currentQuestionOptions"
-        :key="index"
-        :label="option"
-        :value="index"
+        v-for="option in currentQuestionOptions"
+        :key="option.id"
+        :label="option.text"
+        :value="option.id"
         class="mb-3"
-        :color="getOptionState(index).color"
-        :class="getOptionState(index).classes"
+        :color="getOptionState(option.id).color"
+        :class="getOptionState(option.id).classes"
       >
         <template v-slot:label>
-          <span :class="getOptionState(index).textClasses">
-            {{ option }}
+          <span :class="getOptionState(option.id).textClasses">
+            {{ option.text }}
           </span>
         </template>
       </v-radio>
@@ -44,20 +44,20 @@
     <!-- Multiple Choice -->
     <div v-else-if="isMultipleChoiceQuestion">
       <v-checkbox
-        v-for="(option, index) in currentQuestionOptions"
-        :key="index"
-        :label="option"
-        :model-value="isOptionSelected(index)"
-        @update:model-value="(checked) => toggleAnswer(index, checked)"
-        :color="getOptionState(index).color"
-        :class="getOptionState(index).classes"
+        v-for="option in currentQuestionOptions"
+        :key="option.id"
+        :label="option.text"
+        :model-value="isOptionSelected(option.id)"
+        @update:model-value="(checked) => toggleAnswer(option.id, checked)"
+        :color="getOptionState(option.id).color"
+        :class="getOptionState(option.id).classes"
         class="mb-1"
         :disabled="isAnswerSubmitted || isQuizOver"
         density="compact"
       >
         <template v-slot:label>
-          <span :class="getOptionState(index).textClasses">
-            {{ option }}
+          <span :class="getOptionState(option.id).textClasses">
+            {{ option.text }}
           </span>
         </template>
       </v-checkbox>
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Question } from '@/types/quiz'
+import type { Question, Answer } from '@/types/quiz'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getDifficultyColor, validateQuestionAnswer } from '@/utils/quiz'
@@ -78,19 +78,18 @@ const props = defineProps<{
   isSingleChoiceQuestion: boolean
   isMultipleChoiceQuestion: boolean
   isAnswerSubmitted: boolean
-  currentQuestionOptions: string[]
+  currentQuestionOptions: Answer[]
   isQuizOver: boolean
   quizId: string
 }>()
 
-const selectedAnswers =
-  defineModel<Question['correctAnswers']>('selectedAnswers')
+const selectedAnswers = defineModel<string[]>('selectedAnswers')
 
 const validationResult = ref<{
   isCorrect: boolean
   color: string
   icon: string
-  correctAnswers: number[]
+  correctAnswerIds: string[]
   explanation: string
 } | null>(null)
 
@@ -128,7 +127,7 @@ watch(
           isCorrect: false,
           color: 'error',
           icon: 'mdi-alert-circle',
-          correctAnswers: [],
+          correctAnswerIds: [],
           explanation: 'Error occurred while validating answer.',
         }
       }
@@ -139,7 +138,7 @@ watch(
   { immediate: true }
 )
 
-const getOptionState = (index: number) => {
+const getOptionState = (answerId: string) => {
   if (!props.isAnswerSubmitted) {
     return {
       color: 'primary',
@@ -150,8 +149,8 @@ const getOptionState = (index: number) => {
 
   // Use validation result if available
   if (validationResult.value) {
-    const isCorrect = validationResult.value.correctAnswers.includes(index)
-    const isSelected = selectedAnswers.value?.includes(index) || false
+    const isCorrect = validationResult.value.correctAnswerIds.includes(answerId)
+    const isSelected = selectedAnswers.value?.includes(answerId) || false
 
     return {
       color: isCorrect
@@ -173,8 +172,8 @@ const getOptionState = (index: number) => {
   }
 
   // Fallback to original logic
-  const isCorrect = props.currentQuestion?.correctAnswers.includes(index)
-  const isSelected = selectedAnswers.value?.includes(index) || false
+  const isCorrect = props.currentQuestion?.correctAnswerIds.includes(answerId)
+  const isSelected = selectedAnswers.value?.includes(answerId) || false
 
   return {
     color: isCorrect
@@ -195,19 +194,21 @@ const getOptionState = (index: number) => {
   }
 }
 
-const isOptionSelected = (index: number) => {
-  return selectedAnswers.value?.includes(index) || false
+const isOptionSelected = (answerId: string) => {
+  return selectedAnswers.value?.includes(answerId) || false
 }
 
-const toggleAnswer = (index: number, checked: boolean | null) => {
+const toggleAnswer = (answerId: string, checked: boolean | null) => {
   if (props.isAnswerSubmitted || props.isQuizOver) return
 
   if (checked) {
-    if (!selectedAnswers.value?.includes(index)) {
-      selectedAnswers.value?.push(index)
+    if (!selectedAnswers.value?.includes(answerId)) {
+      selectedAnswers.value?.push(answerId)
     }
   } else {
-    selectedAnswers.value = selectedAnswers.value?.filter((i) => i !== index)
+    selectedAnswers.value = selectedAnswers.value?.filter(
+      (id) => id !== answerId
+    )
   }
 }
 </script>

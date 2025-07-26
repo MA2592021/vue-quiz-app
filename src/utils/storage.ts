@@ -19,10 +19,10 @@ export function removeFromStorage(key: string) {
 export interface QuizProgress {
   quizId: string
   currentQuestionIndex: number
-  answers: (number | number[] | null)[]
+  answers: (string | string[] | null)[]
   isAnswerSubmitted: boolean
   isAnswerCorrect: boolean
-  selectedAnswers: number[]
+  selectedAnswers: string[]
   timestamp: number
 }
 

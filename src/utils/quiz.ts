@@ -1,9 +1,65 @@
-import type { Quiz, QuizMetadata } from '../types/quiz'
+import type { Quiz, QuizMetadata, Answer } from '../types/quiz'
 import { getFromStorage } from './storage'
 
 // Cache for loaded quizzes to avoid repeated imports
 let quizzesCache: Quiz[] | null = null
 let currentLocale: string | null = null
+
+/**
+ * Shuffle array using Fisher-Yates algorithm
+ */
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
+/**
+ * Shuffle answers for a question while maintaining correct answer mapping
+ */
+function shuffleQuestionAnswers(question: any): any {
+  if (!question.options || !Array.isArray(question.options)) {
+    return question
+  }
+
+  // Convert string options to Answer objects if they're not already
+  const answers: Answer[] = question.options.map(
+    (option: any, index: number) => {
+      if (typeof option === 'string') {
+        return {
+          id: `answer_${question.id}_${index}`,
+          text: option,
+        }
+      }
+      return option
+    }
+  )
+
+  // Shuffle the answers
+  const shuffledAnswers = shuffleArray(answers)
+
+  // Update correct answer IDs to match the new shuffled positions
+  const correctAnswerIds =
+    question.correctAnswerIds
+      ?.map((correctId: string) => {
+        const originalAnswer = answers.find((answer) => answer.id === correctId)
+        if (!originalAnswer) {
+          console.warn(`Correct answer ID ${correctId} not found in options`)
+          return null
+        }
+        return originalAnswer.id
+      })
+      .filter((id: string | null) => id !== null) || []
+
+  return {
+    ...question,
+    options: shuffledAnswers,
+    correctAnswerIds,
+  }
+}
 
 /**
  * Get current locale from localStorage
@@ -79,23 +135,21 @@ export async function getQuizByIdAndLanguage(
       timeLimit: quiz.timeLimit || 300,
       tags: quiz.tags || [],
       lastUpdated: quiz.lastUpdated || new Date().toISOString(),
-      questions: quiz.questions.map((q: any, index: number) => ({
-        id: q.id || index + 1,
-        question: q.question,
-        type: q.type === 'multiple' ? 'multiple' : 'single',
-        options: q.options,
-        correctAnswers: Array.isArray(q.correctAnswers)
-          ? q.correctAnswers
-              .map((ans: any) =>
-                typeof ans === 'number' ? ans : q.options.indexOf(ans)
-              )
-              .filter((i: number) => i !== -1)
-          : [q.options.indexOf(q.correctAnswers)].filter(
-              (i: number) => i !== -1
-            ),
-        explanation: q.explanation || 'No explanation provided.',
-        difficulty: q.difficulty,
-      })),
+      questions: quiz.questions.map((q: any, index: number) => {
+        // Shuffle the answers for this question
+        const shuffledQuestion = shuffleQuestionAnswers(q)
+
+        return {
+          id: shuffledQuestion.id || index + 1,
+          question: shuffledQuestion.question,
+          type: shuffledQuestion.type === 'multiple' ? 'multiple' : 'single',
+          options: shuffledQuestion.options,
+          correctAnswerIds: shuffledQuestion.correctAnswerIds,
+          explanation:
+            shuffledQuestion.explanation || 'No explanation provided.',
+          difficulty: shuffledQuestion.difficulty,
+        }
+      }),
     })
 
     const transformedQuizzes = loadedQuizzes.map(transformQuiz)
@@ -303,23 +357,21 @@ async function getAllQuizzes(): Promise<Quiz[]> {
       timeLimit: quiz.timeLimit || 300,
       tags: quiz.tags || [],
       lastUpdated: quiz.lastUpdated || new Date().toISOString(),
-      questions: quiz.questions.map((q: any, index: number) => ({
-        id: q.id || index + 1,
-        question: q.question,
-        type: q.type === 'multiple' ? 'multiple' : 'single',
-        options: q.options,
-        correctAnswers: Array.isArray(q.correctAnswers)
-          ? q.correctAnswers
-              .map((ans: any) =>
-                typeof ans === 'number' ? ans : q.options.indexOf(ans)
-              )
-              .filter((i: number) => i !== -1)
-          : [q.options.indexOf(q.correctAnswers)].filter(
-              (i: number) => i !== -1
-            ),
-        explanation: q.explanation || 'No explanation provided.',
-        difficulty: q.difficulty,
-      })),
+      questions: quiz.questions.map((q: any, index: number) => {
+        // Shuffle the answers for this question
+        const shuffledQuestion = shuffleQuestionAnswers(q)
+
+        return {
+          id: shuffledQuestion.id || index + 1,
+          question: shuffledQuestion.question,
+          type: shuffledQuestion.type === 'multiple' ? 'multiple' : 'single',
+          options: shuffledQuestion.options,
+          correctAnswerIds: shuffledQuestion.correctAnswerIds,
+          explanation:
+            shuffledQuestion.explanation || 'No explanation provided.',
+          difficulty: shuffledQuestion.difficulty,
+        }
+      }),
     })
 
     const transformedQuizzes = loadedQuizzes.map(transformQuiz)
@@ -412,12 +464,29 @@ export function validateQuiz(quiz: any): quiz is Quiz {
       return false
     }
 
+    // Validate that options are Answer objects with id and text
+    for (const option of question.options) {
+      if (!option || typeof option !== 'object' || !option.id || !option.text) {
+        console.error('Invalid option structure:', option)
+        return false
+      }
+    }
+
     if (
-      !Array.isArray(question.correctAnswers) ||
-      question.correctAnswers.length === 0
+      !Array.isArray(question.correctAnswerIds) ||
+      question.correctAnswerIds.length === 0
     ) {
       console.error('Question must have correct answers:', question)
       return false
+    }
+
+    // Validate that all correctAnswerIds exist in the options
+    const optionIds = question.options.map((opt: any) => opt.id)
+    for (const correctId of question.correctAnswerIds) {
+      if (!optionIds.includes(correctId)) {
+        console.error('Correct answer ID not found in options:', correctId)
+        return false
+      }
     }
   }
 
@@ -427,28 +496,29 @@ export function validateQuiz(quiz: any): quiz is Quiz {
 /**
  * Validate if the given answers are correct for a specific question
  */
-export function validateAnswer(question: any, userAnswers: number[]): boolean {
+export function validateAnswer(
+  question: any,
+  userAnswerIds: string[]
+): boolean {
   if (
     !question ||
-    !Array.isArray(question.correctAnswers) ||
-    !Array.isArray(userAnswers)
+    !Array.isArray(question.correctAnswerIds) ||
+    !Array.isArray(userAnswerIds)
   ) {
     return false
   }
 
   // Sort both arrays to ensure order doesn't matter
-  const sortedCorrectAnswers = [...question.correctAnswers].sort(
-    (a, b) => a - b
-  )
-  const sortedUserAnswers = [...userAnswers].sort((a, b) => a - b)
+  const sortedCorrectAnswerIds = [...question.correctAnswerIds].sort()
+  const sortedUserAnswerIds = [...userAnswerIds].sort()
 
   // Check if arrays have the same length and content
-  if (sortedCorrectAnswers.length !== sortedUserAnswers.length) {
+  if (sortedCorrectAnswerIds.length !== sortedUserAnswerIds.length) {
     return false
   }
 
-  return sortedCorrectAnswers.every(
-    (answer, index) => answer === sortedUserAnswers[index]
+  return sortedCorrectAnswerIds.every(
+    (answerId, index) => answerId === sortedUserAnswerIds[index]
   )
 }
 
@@ -470,18 +540,18 @@ export function getResultColor(isCorrect: boolean): string {
  * Main function to validate answers and get result information
  * @param quizId - The ID of the quiz
  * @param questionId - The ID of the question
- * @param userAnswers - Array of user's selected answer indices
+ * @param userAnswerIds - Array of user's selected answer IDs
  * @returns Object containing validation result, color, and icon
  */
 export async function validateQuestionAnswer(
   quizId: string,
   questionId: number,
-  userAnswers: number[]
+  userAnswerIds: string[]
 ): Promise<{
   isCorrect: boolean
   color: string
   icon: string
-  correctAnswers: number[]
+  correctAnswerIds: string[]
   explanation: string
 }> {
   try {
@@ -497,7 +567,7 @@ export async function validateQuestionAnswer(
       )
     }
 
-    const isCorrect = validateAnswer(question, userAnswers)
+    const isCorrect = validateAnswer(question, userAnswerIds)
     const color = getResultColor(isCorrect)
     const icon = getResultIcon(isCorrect)
 
@@ -505,7 +575,7 @@ export async function validateQuestionAnswer(
       isCorrect,
       color,
       icon,
-      correctAnswers: question.correctAnswers,
+      correctAnswerIds: question.correctAnswerIds,
       explanation: question.explanation || 'No explanation provided.',
     }
   } catch (error) {
@@ -514,7 +584,7 @@ export async function validateQuestionAnswer(
       isCorrect: false,
       color: 'error',
       icon: 'mdi-alert-circle',
-      correctAnswers: [],
+      correctAnswerIds: [],
       explanation: 'Error occurred while validating answer.',
     }
   }
@@ -526,16 +596,16 @@ export async function validateQuestionAnswer(
 export async function getDetailedAnswerValidation(
   quizId: string,
   questionId: number,
-  userAnswers: number[]
+  userAnswerIds: string[]
 ): Promise<{
   isCorrect: boolean
   color: string
   icon: string
-  correctAnswers: number[]
-  userAnswers: number[]
+  correctAnswerIds: string[]
+  userAnswerIds: string[]
   explanation: string
   question: string
-  options: string[]
+  options: Answer[]
   isMultipleChoice: boolean
 }> {
   try {
@@ -551,7 +621,7 @@ export async function getDetailedAnswerValidation(
       )
     }
 
-    const isCorrect = validateAnswer(question, userAnswers)
+    const isCorrect = validateAnswer(question, userAnswerIds)
     const color = getResultColor(isCorrect)
     const icon = getResultIcon(isCorrect)
 
@@ -559,8 +629,8 @@ export async function getDetailedAnswerValidation(
       isCorrect,
       color,
       icon,
-      correctAnswers: question.correctAnswers,
-      userAnswers,
+      correctAnswerIds: question.correctAnswerIds,
+      userAnswerIds,
       explanation: question.explanation || 'No explanation provided.',
       question: question.question,
       options: question.options,
@@ -572,8 +642,8 @@ export async function getDetailedAnswerValidation(
       isCorrect: false,
       color: 'error',
       icon: 'mdi-alert-circle',
-      correctAnswers: [],
-      userAnswers,
+      correctAnswerIds: [],
+      userAnswerIds,
       explanation: 'Error occurred while validating answer.',
       question: '',
       options: [],

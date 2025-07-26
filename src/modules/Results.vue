@@ -136,16 +136,16 @@
 
                 <div class="ml-4">
                   <div
-                    v-for="(option, optionIndex) in question.options"
-                    :key="optionIndex"
+                    v-for="option in question.options"
+                    :key="option.id"
                     class="mb-2 pa-2 rounded"
-                    :class="getOptionClass(index, optionIndex)"
+                    :class="getOptionClass(index, option.id)"
                   >
                     <div class="d-flex align-center">
                       <v-icon size="small" class="mr-2">
-                        {{ getOptionIcon(index, optionIndex) }}
+                        {{ getOptionIcon(index, option.id) }}
                       </v-icon>
-                      <span>{{ option }}</span>
+                      <span>{{ option.text }}</span>
                     </div>
                   </div>
                 </div>
@@ -296,7 +296,7 @@ const getAnswerIcon = (questionIndex: number) => {
   }
 }
 
-const getOptionClass = (questionIndex: number, optionIndex: number) => {
+const getOptionClass = (questionIndex: number, answerId: string) => {
   if (!result.value || !quiz.value) return ''
 
   try {
@@ -306,10 +306,10 @@ const getOptionClass = (questionIndex: number, optionIndex: number) => {
     if (!userAnswer || !question) return ''
 
     const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
-    const correctAnswers = question.correctAnswers
+    const correctAnswerIds = question.correctAnswerIds
 
-    const isCorrect = correctAnswers.includes(optionIndex)
-    const isSelected = userAnswers.includes(optionIndex)
+    const isCorrect = correctAnswerIds.includes(answerId)
+    const isSelected = userAnswers.includes(answerId)
 
     if (isCorrect && isSelected) {
       return 'text-success font-weight-bold'
@@ -327,7 +327,7 @@ const getOptionClass = (questionIndex: number, optionIndex: number) => {
   }
 }
 
-const getOptionIcon = (questionIndex: number, optionIndex: number) => {
+const getOptionIcon = (questionIndex: number, answerId: string) => {
   if (!result.value || !quiz.value) return 'mdi-circle-outline'
 
   try {
@@ -337,10 +337,10 @@ const getOptionIcon = (questionIndex: number, optionIndex: number) => {
     if (!userAnswer || !question) return 'mdi-circle-outline'
 
     const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
-    const correctAnswers = question.correctAnswers
+    const correctAnswerIds = question.correctAnswerIds
 
-    const isCorrect = correctAnswers.includes(optionIndex)
-    const isSelected = userAnswers.includes(optionIndex)
+    const isCorrect = correctAnswerIds.includes(answerId)
+    const isSelected = userAnswers.includes(answerId)
 
     if (isCorrect && isSelected) {
       return getResultIcon(true)

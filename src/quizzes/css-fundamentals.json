@@ -1,31 +1,37 @@
 {
   "id": "css-fundamentals",
+  "quizId": "css-fundamentals",
   "language": "en",
   "title": "CSS Fundamentals",
-  "description": "Test your understanding of CSS fundamentals and styling",
-  "categories": ["programming", "frontend"],
+  "description": "Test your understanding of CSS fundamentals",
+  "categories": ["programming"],
   "difficulty": "beginner",
   "questions": [
     {
       "id": 1,
       "type": "single",
       "question": "Which CSS property is used to change the text color?",
-      "options": ["text-color", "color", "font-color", "text-style"],
-      "correctAnswers": [1],
+      "options": [
+        { "id": "answer_1_0", "text": "text-color" },
+        { "id": "answer_1_1", "text": "color" },
+        { "id": "answer_1_2", "text": "font-color" },
+        { "id": "answer_1_3", "text": "text-style" }
+      ],
+      "correctAnswerIds": ["answer_1_1"],
       "difficulty": "beginner",
-      "explanation": "The `color` property is used to change the text color in CSS."
+      "explanation": "The `color` property is used to set the text color in CSS."
     },
     {
       "id": 2,
       "type": "single",
       "question": "What does CSS stand for?",
       "options": [
-        "Computer Style Sheets",
-        "Creative Style Sheets",
-        "Cascading Style Sheets",
-        "Colorful Style Sheets"
+        { "id": "answer_2_0", "text": "Computer Style Sheets" },
+        { "id": "answer_2_1", "text": "Creative Style Sheets" },
+        { "id": "answer_2_2", "text": "Cascading Style Sheets" },
+        { "id": "answer_2_3", "text": "Colorful Style Sheets" }
       ],
-      "correctAnswers": [2],
+      "correctAnswerIds": ["answer_2_2"],
       "difficulty": "beginner",
       "explanation": "CSS stands for Cascading Style Sheets."
     },
@@ -33,60 +39,48 @@
       "id": 3,
       "type": "multiple",
       "question": "Which of the following are CSS box model properties?",
-      "options": ["margin", "padding", "border", "content"],
-      "correctAnswers": [0, 1, 2],
+      "options": [
+        { "id": "answer_3_0", "text": "margin" },
+        { "id": "answer_3_1", "text": "padding" },
+        { "id": "answer_3_2", "text": "border" },
+        { "id": "answer_3_3", "text": "content" }
+      ],
+      "correctAnswerIds": [
+        "answer_3_0",
+        "answer_3_1",
+        "answer_3_2",
+        "answer_3_3"
+      ],
       "difficulty": "intermediate",
-      "explanation": "The `margin`, `padding`, and `border` are CSS box model properties."
+      "explanation": "All of these are part of the CSS box model: margin, padding, border, and content."
     },
     {
       "id": 4,
       "type": "single",
-      "question": "Which CSS selector targets elements with a specific class?",
-      "options": ["#", ".", "*", "&"],
-      "correctAnswers": [1],
+      "question": "Which CSS property is used to control the spacing between lines of text?",
+      "options": [
+        { "id": "answer_4_0", "text": "line-height" },
+        { "id": "answer_4_1", "text": "text-spacing" },
+        { "id": "answer_4_2", "text": "letter-spacing" },
+        { "id": "answer_4_3", "text": "word-spacing" }
+      ],
+      "correctAnswerIds": ["answer_4_0"],
       "difficulty": "beginner",
-      "explanation": "The `.` selector is used to target elements with a specific class."
+      "explanation": "The `line-height` property is used to control the spacing between lines of text."
     },
     {
       "id": 5,
       "type": "single",
       "question": "What is the default value of the position property?",
-      "options": ["relative", "absolute", "static", "fixed"],
-      "correctAnswers": [2],
-      "difficulty": "intermediate",
-      "explanation": "The `static` is the default value of the position property."
-    },
-    {
-      "id": 6,
-      "type": "multiple",
-      "question": "Which CSS units are relative?",
-      "options": ["px", "em", "rem", "%"],
-      "correctAnswers": [1, 2, 3],
-      "difficulty": "intermediate",
-      "explanation": "The `em` and `rem` are relative CSS units."
-    },
-    {
-      "id": 7,
-      "type": "single",
-      "question": "Which CSS property is used to create space between elements?",
-      "options": ["spacing", "margin", "gap", "space"],
-      "correctAnswers": [1],
-      "difficulty": "beginner",
-      "explanation": "The `margin` is used to create space between elements."
-    },
-    {
-      "id": 8,
-      "type": "single",
-      "question": "What does the z-index property control?",
       "options": [
-        "Element width",
-        "Element height",
-        "Stacking order",
-        "Element position"
+        { "id": "answer_5_0", "text": "static" },
+        { "id": "answer_5_1", "text": "relative" },
+        { "id": "answer_5_2", "text": "absolute" },
+        { "id": "answer_5_3", "text": "fixed" }
       ],
-      "correctAnswers": [2],
+      "correctAnswerIds": ["answer_5_0"],
       "difficulty": "intermediate",
-      "explanation": "The `z-index` property controls the stacking order of elements."
+      "explanation": "The default value of the position property is `static`."
     }
   ]
 }

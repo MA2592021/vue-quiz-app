@@ -25,12 +25,17 @@ export interface QuizMetadata {
   lastUpdated: string
 }
 
+export interface Answer {
+  id: string
+  text: string
+}
+
 export interface Question {
   id: number
   question: string
   type: 'single' | 'multiple'
-  options: string[]
-  correctAnswers: number[]
+  options: Answer[]
+  correctAnswerIds: string[]
   explanation: string
   difficulty: string
 }
@@ -41,6 +46,6 @@ export interface QuizResult {
   totalQuestions: number
   correctAnswers: number
   timeElapsed: number
-  answers: (number | number[] | null)[]
+  answers: (string | string[] | null)[]
   completedAt: Date
 }

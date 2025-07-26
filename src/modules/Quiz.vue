@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { Question, Quiz, QuizResult } from '../types/quiz'
+import type { Quiz, QuizResult } from '../types/quiz'
 import { useSecureTimer } from '../utils/timer'
 import { getQuizById, validateQuestionAnswer } from '@/utils/quiz'
 import {
@@ -74,8 +74,8 @@ const emit = defineEmits<{
 
 const quiz = ref<Quiz | null>(null)
 const currentQuestionIndex = ref(0)
-const selectedAnswers = ref<Question['correctAnswers']>([])
-const answers = ref<(number | number[] | null)[]>([])
+const selectedAnswers = ref<string[]>([])
+const answers = ref<(string | string[] | null)[]>([])
 const isAnswerSubmitted = ref(false)
 const isAnswerCorrect = ref(false)
 
@@ -255,12 +255,12 @@ function calculateCorrectAnswers() {
     const question = quiz.value?.questions[index]
 
     if (!question || !answer) return false
-    const userAnswers = answer as Question['correctAnswers']
-    const correctAnswers = question.correctAnswers
+    const userAnswerIds = answer as string[]
+    const correctAnswerIds = question.correctAnswerIds
 
     return (
-      userAnswers.length === correctAnswers.length &&
-      userAnswers.every((ans) => correctAnswers.includes(ans))
+      userAnswerIds.length === correctAnswerIds.length &&
+      userAnswerIds.every((answerId) => correctAnswerIds.includes(answerId))
     )
   }).length
 }

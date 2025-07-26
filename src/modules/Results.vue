@@ -1,6 +1,6 @@
 <template>
-  <v-row justify="center" align="center" class="justify-center">
-    <v-col cols="12" md="10" lg="8">
+  <v-row justify="center" align="center" class="justify-center pa-2">
+    <v-col cols="12" sm="11" md="10" lg="8" xl="6">
       <!-- Loading State -->
       <div v-if="loading" class="text-center">
         <v-progress-circular indeterminate size="64" color="primary" />
@@ -22,11 +22,11 @@
       <!-- Results Content -->
       <div v-else-if="quiz && result">
         <!-- Results Header -->
-        <v-card class="mb-6" color="primary" dark>
-          <v-card-title class="text-h4 text-center">
+        <v-card class="mb-4" color="primary" dark>
+          <v-card-title class="text-h5 text-center pa-4">
             {{ t('quiz-results') }}
           </v-card-title>
-          <v-card-text class="text-center text-h6">
+          <v-card-text class="text-center text-h6 pa-4">
             {{ quiz.title }}
           </v-card-text>
         </v-card>
@@ -50,9 +50,16 @@
         <QuestionSummary :result="result" :quiz="quiz" />
 
         <!-- Action Buttons -->
-        <v-card>
-          <v-card-actions class="d-flex justify-space-between">
-            <v-btn @click="retakeQuiz" color="primary" variant="outlined">
+        <v-card class="mb-4">
+          <v-card-actions
+            class="d-flex flex-column flex-sm-row justify-space-between gap-2 pa-4"
+          >
+            <v-btn
+              @click="retakeQuiz"
+              color="primary"
+              variant="outlined"
+              class="flex-grow-1 flex-sm-grow-0"
+            >
               <v-icon left>mdi-refresh</v-icon>
               {{ t('retake-quiz') }}
             </v-btn>
@@ -62,12 +69,17 @@
               color="success"
               variant="outlined"
               :loading="exporting"
+              class="flex-grow-1 flex-sm-grow-0"
             >
               <v-icon left>mdi-file-pdf-box</v-icon>
               {{ t('export-results') }}
             </v-btn>
 
-            <v-btn @click="goHome" color="secondary">
+            <v-btn
+              @click="goHome"
+              color="secondary"
+              class="flex-grow-1 flex-sm-grow-0"
+            >
               <v-icon left>mdi-home</v-icon>
               {{ t('back-to-home') }}
             </v-btn>

@@ -1,26 +1,29 @@
 <template>
   <v-card class="mb-6">
-    <v-card-text class="text-center">
-      <div class="text-h2 font-weight-bold mb-4" :class="getScoreColor()">
+    <v-card-text class="text-center pa-4">
+      <div
+        class="text-h3 text-sm-h2 font-weight-bold mb-4"
+        :class="getScoreColor()"
+      >
         {{ Math.round(score) }}%
       </div>
 
       <v-progress-circular
         :model-value="score"
         :color="getScoreColor()"
-        size="120"
-        width="12"
+        :size="$vuetify.display.smAndDown ? 100 : 120"
+        :width="$vuetify.display.smAndDown ? 8 : 12"
         class="mb-4"
       >
-        <span class="text-h6">{{ Math.round(score) }}%</span>
+        <span class="text-h6 text-sm-h5">{{ Math.round(score) }}%</span>
       </v-progress-circular>
 
-      <div class="text-h6 mb-2">
+      <div class="text-h6 text-sm-h5 mb-2">
         {{ correctAnswers }} {{ t('out-of') }} {{ totalQuestions }}
         {{ t('correct') }}
       </div>
 
-      <div class="text-body-1 text-medium-emphasis mb-2">
+      <div class="text-body-2 text-sm-body-1 text-medium-emphasis mb-2">
         {{ t('completed-on') }} {{ formatDate(completedAt) }}
       </div>
 

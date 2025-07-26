@@ -17,6 +17,7 @@ declare module 'vue' {
     QuizCard: typeof import('./src/components/QuizCard.vue')['default']
     QuizHeader: typeof import('./src/components/QuizHeader.vue')['default']
     QuizQuestion: typeof import('./src/components/QuizQuestion.vue')['default']
+    QuizSummary: typeof import('./src/components/QuizSummary.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScoreCard: typeof import('./src/components/ScoreCard.vue')['default']

@@ -1,34 +1,34 @@
 <template>
   <v-card class="mb-6">
-    <v-card-title>{{ t('detailed-results') }}</v-card-title>
-    <v-card-text>
+    <v-card-title class="pa-4">{{ t('detailed-results') }}</v-card-title>
+    <v-card-text class="pa-4">
       <div
         v-for="(question, index) in quiz.questions"
         :key="question.id"
-        class="mb-6 pa-4 rounded-lg"
+        class="mb-4 pa-3 pa-sm-4 rounded-lg"
         :class="getQuestionCardClass(index)"
       >
-        <div class="d-flex align-center mb-3">
+        <div class="d-flex align-center mb-3 flex-wrap">
           <v-icon :color="getAnswerColor(index)" class="mr-2">
             {{ getAnswerIcon(index) }}
           </v-icon>
-          <span class="font-weight-medium"
+          <span class="font-weight-medium text-body-2 text-sm-body-1"
             >{{ t('question') }} {{ index + 1 }}</span
           >
           <v-chip
             :color="getDifficultyColor(question.difficulty)"
             size="small"
-            class="ms-auto"
+            class="ms-auto mt-1 mt-sm-0"
           >
             {{ t(`difficulty-${question.difficulty}`) }}
           </v-chip>
         </div>
 
-        <p class="text-body-1 mb-3 font-weight-medium">
+        <p class="text-body-2 text-sm-body-1 mb-3 font-weight-medium">
           {{ question.question }}
         </p>
 
-        <div class="ml-4">
+        <div class="ml-2 ml-sm-4">
           <div
             v-for="option in question.options"
             :key="option.id"
@@ -39,7 +39,7 @@
               <v-icon size="small" class="mr-2">
                 {{ getOptionIcon(index, option.id) }}
               </v-icon>
-              <span>{{ option.text }}</span>
+              <span class="text-body-2 text-sm-body-1">{{ option.text }}</span>
             </div>
           </div>
         </div>
@@ -49,8 +49,12 @@
             <template v-slot:prepend>
               <v-icon icon="mdi-lightbulb-outline" />
             </template>
-            <strong>{{ t('explanation') }}:</strong>
-            {{ question.explanation }}
+            <strong class="text-body-2 text-sm-body-1">
+              {{ t('explanation') }}:
+            </strong>
+            <span class="text-body-2 text-sm-body-1">
+              {{ question.explanation }}
+            </span>
           </v-alert>
         </div>
       </div>

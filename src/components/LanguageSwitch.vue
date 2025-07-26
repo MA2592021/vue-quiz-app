@@ -22,7 +22,9 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+
 import { useI18n } from 'vue-i18n'
+
 import { setLocale } from '../plugins/i18n'
 
 // Use i18n Composition API
@@ -37,6 +39,7 @@ const label = computed(() => (isEnglish.value ? 'English' : 'العربية'))
 // Toggle locale
 function toggleLocale() {
   const newLocale = locale.value === 'en' ? 'ar' : 'en'
+
   locale.value = newLocale
   setLocale(newLocale)
 }

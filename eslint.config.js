@@ -38,6 +38,26 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+      'padding-line-between-statements': [
+        'error',
+        // Always insert blank line between import and anything else
+        { blankLine: 'always', prev: 'import', next: '*' },
+
+        // Between variable declarations and anything else
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        {
+          blankLine: 'any',
+          prev: ['const', 'let', 'var'],
+          next: ['const', 'let', 'var'],
+        },
+
+        // Between functions
+        { blankLine: 'always', prev: 'function', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'function' },
+
+        // Between return and anything before
+        { blankLine: 'always', prev: '*', next: 'return' },
+      ],
     },
   },
 

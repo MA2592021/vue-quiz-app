@@ -39,9 +39,13 @@
 
 <script setup lang="ts">
 import { computed, onMounted, reactive } from 'vue'
+
 import type { QuizMetadata } from '../types/quiz'
+
 import { getQuizzesMetadata } from '../utils/quiz'
+
 import { useI18n } from 'vue-i18n'
+
 import QuizCard from '@/components/QuizCard.vue'
 
 const { t } = useI18n()
@@ -51,6 +55,7 @@ const quizzes: QuizMetadata[] = reactive([])
 const loadQuizzes = async () => {
   try {
     const importedQuizzes = await getQuizzesMetadata()
+
     quizzes.push(...importedQuizzes)
   } catch (error) {
     console.error('Error loading quizzes:', error)

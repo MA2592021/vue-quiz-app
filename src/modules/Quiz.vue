@@ -46,13 +46,21 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+
 import type { Question, Quiz, QuizResult } from '../types/quiz'
+
 import { useSecureTimer } from '../utils/timer'
+
 import { getQuizById, validateQuestionAnswer } from '@/utils/quiz'
+
 import { saveToStorage } from '@/utils/storage'
+
 import QuizQuestion from '@/components/QuizQuestion.vue'
+
 import NavigationButtons from '@/components/NavigationButtons.vue'
+
 import ProgressBar from '@/components/ProgressBar.vue'
+
 import QuizHeader from '@/components/QuizHeader.vue'
 
 const props = defineProps<{
@@ -83,6 +91,7 @@ const {
 
 const currentQuestion = computed(() => {
   if (!quiz.value) return null
+
   return quiz.value.questions[currentQuestionIndex.value]
 })
 
@@ -100,20 +109,24 @@ const isMultipleChoiceQuestion = computed(() => {
 const questionProgressText = computed(() => {
   const current = currentQuestionIndex.value + 1
   const total = quiz.value?.questions.length || 0
+
   return `Question ${current} of ${total}`
 })
 const progressPercentage = computed(() => {
   const current = currentQuestionIndex.value + 1
   const total = quiz.value?.questions.length || 1
+
   return Math.round((current / total) * 100)
 })
 const isAnswerSelected = computed(() => {
   if (!currentQuestion.value) return false
+
   return selectedAnswers.value.length > 0
 })
 const isFirstQuestion = computed(() => currentQuestionIndex.value === 0)
 const isNotLastQuestion = computed(() => {
   const totalQuestions = quiz.value?.questions.length || 0
+
   return currentQuestionIndex.value < totalQuestions - 1
 })
 
@@ -130,6 +143,7 @@ const submitAnswer = async () => {
       currentQuestion.value!.id,
       selectedAnswers.value
     )
+
     isAnswerCorrect.value = result.isCorrect
   } catch (error) {
     console.error('Error validating answer:', error)
@@ -144,6 +158,7 @@ const submitAnswer = async () => {
 const loadQuiz = async () => {
   try {
     const quizData = await getQuizById(props.quizId)
+
     quiz.value = quizData
     answers.value = new Array(quiz.value?.questions.length || 0).fill(null)
     if (!isRunning.value && !hasExistingData()) {
@@ -189,6 +204,7 @@ const previousQuestion = () => {
 
 const loadQuestionAnswers = () => {
   const savedAnswer = answers.value[currentQuestionIndex.value]
+
   selectedAnswers.value = Array.isArray(savedAnswer) ? [...savedAnswer] : []
 }
 
@@ -196,18 +212,22 @@ const resetAnswerState = () => {
   isAnswerSubmitted.value = false
   isAnswerCorrect.value = false
 }
+
 function calculateCorrectAnswers() {
   return answers.value.filter((answer, index) => {
     const question = quiz.value?.questions[index]
+
     if (!question || !answer) return false
     const userAnswers = answer as Question['correctAnswers']
     const correctAnswers = question.correctAnswers
+
     return (
       userAnswers.length === correctAnswers.length &&
       userAnswers.every((ans) => correctAnswers.includes(ans))
     )
   }).length
 }
+
 const finishQuiz = () => {
   // Calculate score
   const correctAnswers = calculateCorrectAnswers()
@@ -220,6 +240,7 @@ const finishQuiz = () => {
     answers: answers.value,
     completedAt: new Date(),
   }
+
   saveToStorage(`quiz_result_${props.quizId}`, JSON.stringify(result))
   cleanupTimer()
   emit('finish')

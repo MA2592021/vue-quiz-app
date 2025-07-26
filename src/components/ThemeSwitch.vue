@@ -21,8 +21,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+
 import { useTheme } from 'vuetify'
+
 import { useI18n } from 'vue-i18n'
+
 import { setTheme } from '@/plugins/vuetify'
 
 const theme = useTheme()
@@ -31,6 +34,7 @@ const { t } = useI18n()
 
 function toggleTheme() {
   const newTheme = isDark.value ? 'light' : 'dark'
+
   theme.change(newTheme)
   setTheme(newTheme)
 }

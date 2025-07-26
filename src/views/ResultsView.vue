@@ -185,9 +185,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+
 import { useRouter, useRoute } from 'vue-router'
+
 import { useI18n } from 'vue-i18n'
+
 import type { Quiz, QuizResult } from '../types/quiz'
+
 import {
   getQuizById,
   getDifficultyColor,
@@ -195,7 +199,9 @@ import {
   getResultIcon,
   getResultColor,
 } from '@/utils/quiz'
+
 import { getFromStorage, removeFromStorage } from '@/utils/storage'
+
 import { formatDate, formatTime } from '@/utils/formatTime'
 
 const { t } = useI18n()
@@ -216,6 +222,7 @@ const loadData = async () => {
 
     // Load quiz data
     const quizData = await getQuizById(quizId)
+
     if (!quizData) {
       throw new Error(t('quiz-not-found'))
     }
@@ -223,11 +230,13 @@ const loadData = async () => {
 
     // Load result data from localStorage
     const resultData = getFromStorage(`quiz_result_${quizId}`)
+
     if (!resultData) {
       throw new Error(t('no-results-found'))
     }
 
     const parsedResult = JSON.parse(resultData) as QuizResult
+
     parsedResult.completedAt = new Date(parsedResult.completedAt)
     result.value = parsedResult
   } catch (err) {
@@ -241,8 +250,10 @@ const loadData = async () => {
 
 const getScoreColor = () => {
   const score = result.value?.score || 0
+
   if (score >= 80) return 'success'
   if (score >= 60) return 'warning'
+
   return 'error'
 }
 
@@ -258,9 +269,11 @@ const getAnswerColor = (questionIndex: number) => {
     // Use the shared validation function
     const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
     const isCorrect = validateAnswer(question, userAnswers)
+
     return getResultColor(isCorrect)
   } catch (err) {
     console.error('Error getting answer color:', err)
+
     return 'grey'
   }
 }
@@ -276,9 +289,11 @@ const getAnswerIcon = (questionIndex: number) => {
 
     const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
     const isCorrect = validateAnswer(question, userAnswers)
+
     return getResultIcon(isCorrect)
   } catch (err) {
     console.error('Error getting answer icon:', err)
+
     return 'mdi-help-circle'
   }
 }
@@ -309,6 +324,7 @@ const getOptionClass = (questionIndex: number, optionIndex: number) => {
     return ''
   } catch (err) {
     console.error('Error getting option class:', err)
+
     return ''
   }
 }
@@ -339,12 +355,14 @@ const getOptionIcon = (questionIndex: number, optionIndex: number) => {
     return 'mdi-circle-outline'
   } catch (err) {
     console.error('Error getting option icon:', err)
+
     return 'mdi-circle-outline'
   }
 }
 
 const getQuestionCardClass = (questionIndex: number) => {
   const isCorrect = isAnswerCorrect(questionIndex)
+
   return isCorrect ? 'bg-green-lighten-5' : 'bg-red-lighten-4'
 }
 
@@ -358,9 +376,11 @@ const isAnswerCorrect = (questionIndex: number) => {
     if (!userAnswer || !question) return false
 
     const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
+
     return validateAnswer(question, userAnswers)
   } catch (err) {
     console.error('Error checking if answer is correct:', err)
+
     return false
   }
 }

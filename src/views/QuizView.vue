@@ -6,7 +6,9 @@
 
 <script setup lang="ts">
 import Quiz from '@/modules/Quiz.vue'
+
 import { useRoute } from 'vue-router'
+
 import { useRouter } from 'vue-router'
 
 const router = useRouter()

@@ -37,5 +37,12 @@
   "quiz-not-found": "Quiz not found",
   "no-results-found": "No results found for this quiz",
   "error-loading-results": "Error loading results",
-  "loading-results": "Loading results..."
+  "loading-results": "Loading results...",
+  "previous": "Previous",
+  "submit": "Submit",
+  "next": "Next",
+  "finish-quiz": "Finish Quiz",
+  "question": "Question",
+  "time-remaining": "Time Remaining",
+  "of": "of"
 }

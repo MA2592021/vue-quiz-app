@@ -15,12 +15,15 @@
       <div class="text-h4 text-sm-h3 font-weight-bold">
         {{ formattedTime }}
       </div>
-      <div class="text-caption">Time Remaining</div>
+      <div class="text-caption">{{ t('time-remaining') }}</div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import type { Quiz } from '@/types/quiz'
+
+const { t } = useI18n()
 
 defineProps<{
   title: Quiz['title']

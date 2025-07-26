@@ -129,6 +129,11 @@ export class SecureTimer {
     return Math.max(0, remaining)
   }
 
+  // Get actual elapsed time in seconds
+  getElapsedTime(): number {
+    return Math.floor(this.elapsedTime.value / 1000)
+  }
+
   // Get formatted countdown time string (MM:SS)
   getFormattedTime(): string {
     const remainingSeconds = this.getRemainingTime()
@@ -171,12 +176,14 @@ export class SecureTimer {
 // Composable for using the timer in Vue components
 export function useSecureTimer(quizId: string) {
   const timer = new SecureTimer(quizId)
+  const remainingTime = ref<number>(0)
   const elapsedTime = ref<number>(0)
   const formattedTime = ref<string>('00:00')
   const isRunning = ref<boolean>(false)
 
   const updateTimer = () => {
-    elapsedTime.value = timer.getRemainingTime()
+    remainingTime.value = timer.getRemainingTime()
+    elapsedTime.value = timer.getElapsedTime()
     formattedTime.value = timer.getFormattedTime()
     isRunning.value = timer.getIsRunning()
   }
@@ -223,6 +230,7 @@ export function useSecureTimer(quizId: string) {
   })
 
   return {
+    remainingTime,
     elapsedTime,
     formattedTime,
     isRunning,

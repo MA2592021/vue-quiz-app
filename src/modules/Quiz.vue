@@ -46,22 +46,17 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-
+import { useI18n } from 'vue-i18n'
 import type { Question, Quiz, QuizResult } from '../types/quiz'
-
 import { useSecureTimer } from '../utils/timer'
-
 import { getQuizById, validateQuestionAnswer } from '@/utils/quiz'
-
 import { saveToStorage } from '@/utils/storage'
-
 import QuizQuestion from '@/components/QuizQuestion.vue'
-
 import NavigationButtons from '@/components/NavigationButtons.vue'
-
 import ProgressBar from '@/components/ProgressBar.vue'
-
 import QuizHeader from '@/components/QuizHeader.vue'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   quizId: string
@@ -110,7 +105,7 @@ const questionProgressText = computed(() => {
   const current = currentQuestionIndex.value + 1
   const total = quiz.value?.questions.length || 0
 
-  return `Question ${current} of ${total}`
+  return `${t('question')} ${current} ${t('of')} ${total}`
 })
 const progressPercentage = computed(() => {
   const current = currentQuestionIndex.value + 1

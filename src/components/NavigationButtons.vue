@@ -9,8 +9,10 @@
       variant="outlined"
       size="large"
     >
-      <v-icon left>mdi-arrow-left</v-icon>
-      Previous
+      <v-icon class="me-2">{{
+        isArabic ? 'mdi-arrow-right' : 'mdi-arrow-left'
+      }}</v-icon>
+      {{ t('previous') }}
     </v-btn>
 
     <div class="d-flex gap-3">
@@ -21,8 +23,8 @@
         color="primary"
         size="large"
       >
-        Submit
-        <v-icon right>mdi-check</v-icon>
+        {{ t('submit') }}
+        <v-icon class="ms-2">mdi-check</v-icon>
       </v-btn>
 
       <v-btn
@@ -32,8 +34,10 @@
         color="primary"
         size="large"
       >
-        Next
-        <v-icon right>mdi-arrow-right</v-icon>
+        {{ t('next') }}
+        <v-icon class="ms-2">{{
+          isArabic ? 'mdi-arrow-left' : 'mdi-arrow-right'
+        }}</v-icon>
       </v-btn>
 
       <v-btn
@@ -43,14 +47,19 @@
         color="success"
         size="large"
       >
-        Finish Quiz
-        <v-icon right>mdi-check</v-icon>
+        {{ t('finish-quiz') }}
+        <v-icon class="ms-2">mdi-check</v-icon>
       </v-btn>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t, locale } = useI18n()
+
 defineProps<{
   isFirstQuestion: boolean
   isAnswerSubmitted: boolean
@@ -64,4 +73,6 @@ const emit = defineEmits<{
   (_e: 'next'): void
   (_e: 'finish'): void
 }>()
+
+const isArabic = computed(() => locale.value === 'ar')
 </script>

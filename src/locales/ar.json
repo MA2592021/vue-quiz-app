@@ -37,5 +37,12 @@
   "quiz-not-found": "الاختبار غير موجود",
   "no-results-found": "لا توجد نتائج لهذا الاختبار",
   "error-loading-results": "خطأ في تحميل النتائج",
-  "loading-results": "جاري تحميل النتائج..."
+  "loading-results": "جاري تحميل النتائج...",
+  "previous": "السابق",
+  "submit": "إرسال",
+  "next": "التالي",
+  "finish-quiz": "إنهاء الاختبار",
+  "question": "السؤال",
+  "time-remaining": "الوقت المتبقي",
+  "of": "من أصل"
 }

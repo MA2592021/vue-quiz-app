@@ -124,7 +124,7 @@
                   <v-chip
                     :color="getDifficultyColor(question.difficulty)"
                     size="small"
-                    class="ml-auto"
+                    class="ms-auto"
                   >
                     {{ t(`difficulty-${question.difficulty}`) }}
                   </v-chip>
@@ -185,13 +185,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-
 import { useRouter, useRoute } from 'vue-router'
-
 import { useI18n } from 'vue-i18n'
-
 import type { Quiz, QuizResult } from '../types/quiz'
-
 import {
   getQuizById,
   getDifficultyColor,
@@ -199,9 +195,7 @@ import {
   getResultIcon,
   getResultColor,
 } from '@/utils/quiz'
-
 import { getFromStorage, removeFromStorage } from '@/utils/storage'
-
 import { formatDate, formatTime } from '@/utils/formatTime'
 
 const { t } = useI18n()

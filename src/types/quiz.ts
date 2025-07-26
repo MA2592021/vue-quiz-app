@@ -1,5 +1,6 @@
 export interface Quiz {
   id: string
+  language: string
   title: string
   description: string
   categories: string[]
@@ -12,6 +13,7 @@ export interface Quiz {
 
 export interface QuizMetadata {
   id: string
+  language: string
   title: string
   description: string
   categories: string[]

@@ -1,7 +1,21 @@
 import type { Quiz, QuizMetadata } from '../types/quiz'
+import { getFromStorage } from './storage'
 
 // Cache for loaded quizzes to avoid repeated imports
 let quizzesCache: Quiz[] | null = null
+let currentLocale: string | null = null
+
+/**
+ * Get current locale from localStorage
+ */
+function getCurrentLocale(): string {
+  try {
+    const locale = getFromStorage('locale') || 'en'
+    return locale
+  } catch {
+    return 'en'
+  }
+}
 
 /**
  * Get metadata for all quizzes (lightweight info for main screen)
@@ -11,6 +25,7 @@ export async function getQuizzesMetadata(): Promise<QuizMetadata[]> {
     const quizzes = await getAllQuizzes()
     return quizzes.map((quiz) => ({
       id: quiz.id,
+      language: quiz.language,
       title: quiz.title,
       description: quiz.description,
       categories: quiz.categories,
@@ -28,7 +43,7 @@ export async function getQuizzesMetadata(): Promise<QuizMetadata[]> {
 }
 
 /**
- * Get full quiz data by ID
+ * Get full quiz data by ID (for current locale)
  */
 export async function getQuizById(quizId: string): Promise<Quiz | null> {
   try {
@@ -36,6 +51,65 @@ export async function getQuizById(quizId: string): Promise<Quiz | null> {
     return quizzes.find((quiz) => quiz.id === quizId) || null
   } catch (error) {
     console.error(`Error getting quiz by ID ${quizId}:`, error)
+    return null
+  }
+}
+
+/**
+ * Get full quiz data by ID and language
+ */
+export async function getQuizByIdAndLanguage(
+  quizId: string,
+  language: string
+): Promise<Quiz | null> {
+  try {
+    // Dynamically import all quiz JSON files from the quizzes directory
+    const quizFiles = import.meta.glob('../quizzes/*.json')
+    const quizImports = Object.values(quizFiles).map((loader) => loader())
+    const loadedQuizzes = await Promise.all(quizImports)
+
+    // Transform the quiz data to match the expected Quiz type
+    const transformQuiz = (quiz: any): Quiz => ({
+      id: quiz.id,
+      language: quiz.language || 'en',
+      title: quiz.title,
+      description: quiz.description,
+      categories: quiz.categories || ['General'],
+      difficulty: quiz.difficulty,
+      timeLimit: quiz.timeLimit || 300,
+      tags: quiz.tags || [],
+      lastUpdated: quiz.lastUpdated || new Date().toISOString(),
+      questions: quiz.questions.map((q: any, index: number) => ({
+        id: q.id || index + 1,
+        question: q.question,
+        type: q.type === 'multiple' ? 'multiple' : 'single',
+        options: q.options,
+        correctAnswers: Array.isArray(q.correctAnswers)
+          ? q.correctAnswers
+              .map((ans: any) =>
+                typeof ans === 'number' ? ans : q.options.indexOf(ans)
+              )
+              .filter((i: number) => i !== -1)
+          : [q.options.indexOf(q.correctAnswers)].filter(
+              (i: number) => i !== -1
+            ),
+        explanation: q.explanation || 'No explanation provided.',
+        difficulty: q.difficulty,
+      })),
+    })
+
+    const transformedQuizzes = loadedQuizzes.map(transformQuiz)
+
+    return (
+      transformedQuizzes.find(
+        (quiz) => quiz.id === quizId && quiz.language === language
+      ) || null
+    )
+  } catch (error) {
+    console.error(
+      `Error getting quiz by ID ${quizId} and language ${language}:`,
+      error
+    )
     return null
   }
 }
@@ -205,7 +279,10 @@ export async function getQuizStats(): Promise<{
  * Load and cache all quizzes from JSON files
  */
 async function getAllQuizzes(): Promise<Quiz[]> {
-  if (quizzesCache) {
+  const locale = getCurrentLocale()
+
+  // Check if we need to reload quizzes due to locale change
+  if (quizzesCache && currentLocale === locale) {
     return quizzesCache
   }
 
@@ -218,6 +295,7 @@ async function getAllQuizzes(): Promise<Quiz[]> {
     // Transform the quiz data to match the expected Quiz type
     const transformQuiz = (quiz: any): Quiz => ({
       id: quiz.id,
+      language: quiz.language || 'en',
       title: quiz.title,
       description: quiz.description,
       categories: quiz.categories || ['General'],
@@ -246,8 +324,23 @@ async function getAllQuizzes(): Promise<Quiz[]> {
 
     const transformedQuizzes = loadedQuizzes.map(transformQuiz)
 
+    // Filter quizzes based on locale
+    let filteredQuizzes = transformedQuizzes
+
+    // Filter quizzes by language based on current locale
+    filteredQuizzes = transformedQuizzes.filter((quiz: any) => {
+      const quizLanguage = quiz.language || 'en'
+
+      // Match quiz language with current locale
+      if (quizLanguage === locale) {
+        return true
+      }
+
+      return false
+    })
+
     // Validate all quizzes using the type guard
-    const validQuizzes = transformedQuizzes.filter((quiz: any) => {
+    const validQuizzes = filteredQuizzes.filter((quiz: any) => {
       if (!validateQuiz(quiz)) {
         console.warn(`Quiz "${quiz.id}" failed validation and will be skipped`)
         return false
@@ -256,6 +349,7 @@ async function getAllQuizzes(): Promise<Quiz[]> {
     })
 
     quizzesCache = validQuizzes
+    currentLocale = locale
     return quizzesCache
   } catch (error) {
     console.error('Error loading quizzes:', error)
@@ -268,13 +362,22 @@ async function getAllQuizzes(): Promise<Quiz[]> {
  */
 export function clearQuizCache(): void {
   quizzesCache = null
+  currentLocale = null
+}
+
+/**
+ * Clear quiz cache when language changes
+ */
+export function clearQuizCacheOnLanguageChange(): void {
+  quizzesCache = null
+  currentLocale = null
 }
 
 /**
  * Validate quiz data structure (type guard)
  */
 export function validateQuiz(quiz: any): quiz is Quiz {
-  const requiredFields = ['id', 'title', 'description', 'questions']
+  const requiredFields = ['id', 'language', 'title', 'description', 'questions']
   const hasRequiredFields = requiredFields.every(
     (field) => quiz[field] !== undefined
   )
@@ -284,6 +387,12 @@ export function validateQuiz(quiz: any): quiz is Quiz {
       'Quiz missing required fields:',
       requiredFields.filter((field) => quiz[field] === undefined)
     )
+    return false
+  }
+
+  // Validate language field
+  if (!['en', 'ar'].includes(quiz.language)) {
+    console.error('Quiz language must be "en" or "ar"')
     return false
   }
 

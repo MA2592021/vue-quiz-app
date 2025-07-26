@@ -1,0 +1,97 @@
+{
+  "id": "vue-fundamentals",
+  "language": "ar",
+  "title": "أساسيات Vue",
+  "description": "اختبر فهمك لأساسيات إطار عمل Vue.js",
+  "categories": ["programming", "frontend"],
+  "difficulty": "intermediate",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "ما هو التركيب الصحيح لربط البيانات في قوالب Vue؟",
+      "options": [
+        "{{ message }}",
+        "[[ message ]]",
+        "{ message }",
+        "<% message %>"
+      ],
+      "correctAnswers": [0],
+      "difficulty": "beginner",
+      "explanation": "تركيب `{{ message }}` يستخدم لربط البيانات في قوالب Vue."
+    },
+    {
+      "type": "single",
+      "id": 2,
+      "question": "أي توجيه يستخدم لعرض عنصر بشكل مشروط في Vue؟",
+      "options": ["v-if", "v-show", "v-model", "v-bind"],
+      "correctAnswers": [0],
+      "difficulty": "beginner",
+      "explanation": "توجيه `v-if` يستخدم لعرض عنصر بشكل مشروط في Vue."
+    },
+    {
+      "id": 3,
+      "type": "multiple",
+      "question": "أي من التالي هي ميزات Composition API في Vue 3؟",
+      "options": ["ref()", "reactive()", "data()", "computed()"],
+      "correctAnswers": [0, 1, 3],
+      "difficulty": "intermediate",
+      "explanation": "`ref()` و `reactive()` و `computed()` هي ميزات Composition API في Vue 3."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "أي توجيه يستخدم للربط ثنائي الاتجاه في Vue؟",
+      "options": ["v-if", "v-on", "v-bind", "v-model"],
+      "correctAnswers": [3],
+      "difficulty": "beginner",
+      "explanation": "توجيه `v-model` يستخدم للربط ثنائي الاتجاه في Vue."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "ماذا تفعل دالة `setup()` في Vue 3؟",
+      "options": [
+        "تحدد الخصائص المحسوبة",
+        "تحل محل كتلة القالب",
+        "تهيئ الحالة التفاعلية ودوال التكوين",
+        "تثبت المكون في DOM"
+      ],
+      "correctAnswers": [2],
+      "difficulty": "intermediate",
+      "explanation": "دالة `setup()` في Vue 3 تهيئ الحالة التفاعلية ودوال التكوين."
+    },
+    {
+      "id": 6,
+      "type": "multiple",
+      "question": "أي من خطافات دورة الحياة متاحة في Composition API في Vue 3؟",
+      "options": ["onMounted", "onUpdated", "created", "onUnmounted"],
+      "correctAnswers": [0, 1, 3],
+      "difficulty": "intermediate",
+      "explanation": "`onMounted` و `onUpdated` و `onUnmounted` هي خطافات دورة الحياة في Composition API في Vue 3."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "أي توجيه يستخدم للتكرار على العناصر في قوالب Vue؟",
+      "options": ["v-if", "v-for", "v-loop", "v-each"],
+      "correctAnswers": [1],
+      "difficulty": "beginner",
+      "explanation": "توجيه `v-for` يستخدم للتكرار على العناصر في قوالب Vue."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "ما هو دور `emit` في مكونات Vue؟",
+      "options": [
+        "إرسال طلبات HTTP",
+        "مشاركة الحالة بين المكونات",
+        "تشغيل أحداث المكون الأب",
+        "تسجيل مكون عام"
+      ],
+      "correctAnswers": [2],
+      "difficulty": "intermediate",
+      "explanation": "`emit` يستخدم لتشغيل أحداث المكون الأب في مكونات Vue."
+    }
+  ]
+}

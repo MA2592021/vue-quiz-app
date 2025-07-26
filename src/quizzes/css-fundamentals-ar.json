@@ -1,0 +1,92 @@
+{
+  "id": "css-fundamentals",
+  "language": "ar",
+  "title": "أساسيات CSS",
+  "description": "اختبر فهمك لأساسيات CSS والتنسيق",
+  "categories": ["programming", "frontend"],
+  "difficulty": "beginner",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "أي خاصية CSS تستخدم لتغيير لون النص؟",
+      "options": ["text-color", "color", "font-color", "text-style"],
+      "correctAnswers": [1],
+      "difficulty": "beginner",
+      "explanation": "خاصية `color` تستخدم لتغيير لون النص في CSS."
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "ماذا تعني CSS؟",
+      "options": [
+        "Computer Style Sheets",
+        "Creative Style Sheets",
+        "Cascading Style Sheets",
+        "Colorful Style Sheets"
+      ],
+      "correctAnswers": [2],
+      "difficulty": "beginner",
+      "explanation": "CSS تعني Cascading Style Sheets."
+    },
+    {
+      "id": 3,
+      "type": "multiple",
+      "question": "أي من التالي هي خصائص نموذج الصندوق في CSS؟",
+      "options": ["margin", "padding", "border", "content"],
+      "correctAnswers": [0, 1, 2],
+      "difficulty": "intermediate",
+      "explanation": "`margin` و `padding` و `border` هي خصائص نموذج الصندوق في CSS."
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "أي محدد CSS يستهدف العناصر بفئة محددة؟",
+      "options": ["#", ".", "*", "&"],
+      "correctAnswers": [1],
+      "difficulty": "beginner",
+      "explanation": "محدد `.` يستخدم لاستهداف العناصر بفئة محددة."
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "ما هي القيمة الافتراضية لخاصية position؟",
+      "options": ["relative", "absolute", "static", "fixed"],
+      "correctAnswers": [2],
+      "difficulty": "intermediate",
+      "explanation": "`static` هي القيمة الافتراضية لخاصية position."
+    },
+    {
+      "id": 6,
+      "type": "multiple",
+      "question": "أي وحدات CSS نسبية؟",
+      "options": ["px", "em", "rem", "%"],
+      "correctAnswers": [1, 2, 3],
+      "difficulty": "intermediate",
+      "explanation": "`em` و `rem` و `%` هي وحدات CSS نسبية."
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "أي خاصية CSS تستخدم لإنشاء مسافة بين العناصر؟",
+      "options": ["spacing", "margin", "gap", "space"],
+      "correctAnswers": [1],
+      "difficulty": "beginner",
+      "explanation": "`margin` تستخدم لإنشاء مسافة بين العناصر."
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "ماذا تتحكم خاصية z-index؟",
+      "options": [
+        "عرض العنصر",
+        "ارتفاع العنصر",
+        "ترتيب الطبقات",
+        "موضع العنصر"
+      ],
+      "correctAnswers": [2],
+      "difficulty": "intermediate",
+      "explanation": "خاصية `z-index` تتحكم في ترتيب طبقات العناصر."
+    }
+  ]
+}

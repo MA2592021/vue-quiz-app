@@ -22,10 +22,9 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-
 import { useI18n } from 'vue-i18n'
-
 import { setLocale } from '../plugins/i18n'
+import router from '@/router'
 
 // Use i18n Composition API
 const { locale, t } = useI18n()
@@ -42,5 +41,6 @@ function toggleLocale() {
 
   locale.value = newLocale
   setLocale(newLocale)
+  router.go(0)
 }
 </script>

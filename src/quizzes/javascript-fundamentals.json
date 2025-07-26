@@ -1,5 +1,7 @@
 {
   "id": "javascript-fundamentals",
+  "quizId": "javascript-fundamentals",
+  "language": "en",
   "title": "JS Fundamentals",
   "description": "Test your understanding of JavaScript fundamentals",
   "categories": ["programming"],

@@ -108,7 +108,7 @@ const questionProgressText = computed(() => {
   return `${t('question')} ${current} ${t('of')} ${total}`
 })
 const progressPercentage = computed(() => {
-  const current = currentQuestionIndex.value + 1
+  const current = currentQuestionIndex.value
   const total = quiz.value?.questions.length || 1
 
   return Math.round((current / total) * 100)

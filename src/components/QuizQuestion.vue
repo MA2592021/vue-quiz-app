@@ -65,11 +65,8 @@
 
 <script setup lang="ts">
 import type { Question } from '@/types/quiz'
-
 import { computed, ref, watch } from 'vue'
-
 import { useI18n } from 'vue-i18n'
-
 import { getDifficultyColor, validateQuestionAnswer } from '@/utils/quiz'
 
 const { t } = useI18n()

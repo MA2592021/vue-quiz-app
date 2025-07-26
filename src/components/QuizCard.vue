@@ -58,13 +58,9 @@
 </template>
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-
 import { useRouter } from 'vue-router'
-
 import type { QuizMetadata } from '../types/quiz'
-
 import { formatTime } from '@/utils/formatTime'
-
 import { getDifficultyColor } from '@/utils/quiz'
 
 const { t } = useI18n()

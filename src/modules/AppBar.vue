@@ -28,11 +28,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
 import ThemeSwitch from '../components/ThemeSwitch.vue'
-
 import LanguageSwitch from '../components/LanguageSwitch.vue'
-
 import { useI18n } from 'vue-i18n'
 
 const dialog = ref(false)

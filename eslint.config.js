@@ -40,8 +40,26 @@ export default [
       ],
       'padding-line-between-statements': [
         'error',
-        // Always insert blank line between import and anything else
-        { blankLine: 'always', prev: 'import', next: '*' },
+        // Disallow blank lines between import statements
+        {
+          blankLine: 'never',
+          prev: 'import',
+          next: 'import',
+        },
+        // Allow a blank line only after the last import statement and before other statements
+        {
+          blankLine: 'always',
+          prev: 'import',
+          next: [
+            'const',
+            'let',
+            'var',
+            'function',
+            'class',
+            'export',
+            'expression',
+          ],
+        },
 
         // Between variable declarations and anything else
         { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },

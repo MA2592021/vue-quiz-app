@@ -2,7 +2,7 @@
   <v-app>
     <v-locale-provider :rtl="isRtl">
       <AppBar />
-      <v-main class="bg-bgPrimary">
+      <v-main id="main-content" class="bg-bgPrimary" role="main">
         <router-view />
       </v-main>
     </v-locale-provider>

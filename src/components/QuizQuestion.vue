@@ -25,13 +25,19 @@
       :disabled="isAnswerSubmitted || isQuizOver"
     >
       <v-radio
-        v-for="option in currentQuestionOptions"
+        v-for="(option, index) in currentQuestionOptions"
         :key="option.id"
         :label="option.text"
         :value="option.id"
         class="mb-3"
         :color="getOptionState(option.id).color"
         :class="getOptionState(option.id).classes"
+        :data-option-index="index"
+        tabindex="0"
+        @keydown="(event: KeyboardEvent) => handleOptionKeyDown(event, index)"
+        role="radio"
+        :aria-checked="isOptionSelected(option.id)"
+        :aria-label="`Option ${index + 1}: ${option.text}`"
       >
         <template v-slot:label>
           <span :class="getOptionState(option.id).textClasses">
@@ -44,7 +50,7 @@
     <!-- Multiple Choice -->
     <div v-else-if="isMultipleChoiceQuestion">
       <v-checkbox
-        v-for="option in currentQuestionOptions"
+        v-for="(option, index) in currentQuestionOptions"
         :key="option.id"
         :label="option.text"
         :model-value="isOptionSelected(option.id)"
@@ -54,6 +60,12 @@
         class="mb-1"
         :disabled="isAnswerSubmitted || isQuizOver"
         density="compact"
+        :data-option-index="index"
+        tabindex="0"
+        @keydown="(event: KeyboardEvent) => handleOptionKeyDown(event, index)"
+        role="checkbox"
+        :aria-checked="isOptionSelected(option.id)"
+        :aria-label="`Option ${index + 1}: ${option.text}`"
       >
         <template v-slot:label>
           <span :class="getOptionState(option.id).textClasses">
@@ -67,7 +79,7 @@
 
 <script setup lang="ts">
 import type { Question, Answer } from '@/types/quiz'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getDifficultyColor, validateQuestionAnswer } from '@/utils/quiz'
 
@@ -211,6 +223,69 @@ const toggleAnswer = (answerId: string, checked: boolean | null) => {
     )
   }
 }
+
+// Keyboard navigation for answer options
+const handleOptionKeyDown = (event: KeyboardEvent, optionIndex: number) => {
+  if (props.isAnswerSubmitted || props.isQuizOver) return
+
+  switch (event.key) {
+    case 'Enter':
+    case ' ': {
+      event.preventDefault()
+      const optionId = props.currentQuestionOptions[optionIndex].id
+
+      if (props.isSingleChoiceQuestion) {
+        selectedAnswers.value = [optionId]
+      } else if (props.isMultipleChoiceQuestion) {
+        const isSelected = selectedAnswers.value?.includes(optionId)
+
+        if (isSelected) {
+          selectedAnswers.value = selectedAnswers.value?.filter(
+            (id) => id !== optionId
+          )
+        } else {
+          selectedAnswers.value?.push(optionId)
+        }
+      }
+      break
+    }
+    case 'ArrowDown': {
+      event.preventDefault()
+      const nextIndex = (optionIndex + 1) % props.currentQuestionOptions.length
+      const nextOption = document.querySelector(
+        `[data-option-index="${nextIndex}"]`
+      ) as HTMLElement
+
+      nextOption?.focus()
+      break
+    }
+    case 'ArrowUp': {
+      event.preventDefault()
+      const prevIndex =
+        optionIndex === 0
+          ? props.currentQuestionOptions.length - 1
+          : optionIndex - 1
+      const prevOption = document.querySelector(
+        `[data-option-index="${prevIndex}"]`
+      ) as HTMLElement
+
+      prevOption?.focus()
+      break
+    }
+  }
+}
+
+// Focus management
+onMounted(() => {
+  // Focus the first option when the question loads
+  const firstOption = document.querySelector(
+    '[data-option-index="0"]'
+  ) as HTMLElement
+
+  if (firstOption) {
+    firstOption.focus()
+  }
+})
 </script>
 
 <style scoped>

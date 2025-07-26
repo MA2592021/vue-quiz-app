@@ -56,6 +56,8 @@ import {
   getQuizProgress,
   removeQuizProgress,
 } from '@/utils/storage'
+import { useKeyboardNavigation } from '@/composables/useKeyboardNavigation'
+import { useFocusManagement } from '@/composables/useFocusManagement'
 import QuizQuestion from '@/components/QuizQuestion.vue'
 import NavigationButtons from '@/components/NavigationButtons.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
@@ -71,6 +73,77 @@ const emit = defineEmits<{
   (_e: 'finish'): void
   (_e: 'error'): void
 }>()
+
+// Keyboard navigation setup
+const { setEmitFunction } = useKeyboardNavigation()
+const { announceToScreenReader } = useFocusManagement()
+
+// Set up keyboard event handlers
+const handleKeyboardEvent = (event: string, data?: any) => {
+  switch (event) {
+    case 'previous':
+      if (!isFirstQuestion.value && !isQuizOver.value) {
+        previousQuestion()
+        announceToScreenReader(t('previous-question'))
+      }
+      break
+    case 'next':
+      if (isNotLastQuestion.value && !isQuizOver.value) {
+        nextQuestion()
+        announceToScreenReader(t('next-question'))
+      }
+      break
+    case 'submit':
+      if (
+        isAnswerSelected.value &&
+        !isAnswerSubmitted.value &&
+        !isQuizOver.value
+      ) {
+        submitAnswer()
+        announceToScreenReader(t('answer-submitted'))
+      } else if (
+        isAnswerSubmitted.value &&
+        isNotLastQuestion.value &&
+        !isQuizOver.value
+      ) {
+        nextQuestion()
+        announceToScreenReader(t('next-question'))
+      } else if (
+        isAnswerSubmitted.value &&
+        !isNotLastQuestion.value &&
+        !isQuizOver.value
+      ) {
+        finishQuiz()
+        announceToScreenReader(t('quiz-finished'))
+      }
+      break
+    case 'toggle-option':
+      // This will be handled by the QuizQuestion component
+      break
+    case 'select-option':
+      if (data !== undefined && currentQuestionOptions.value[data]) {
+        const optionId = currentQuestionOptions.value[data].id
+
+        if (isSingleChoiceQuestion.value) {
+          selectedAnswers.value = [optionId]
+        } else if (isMultipleChoiceQuestion.value) {
+          const index = selectedAnswers.value.indexOf(optionId)
+
+          if (index > -1) {
+            selectedAnswers.value.splice(index, 1)
+          } else {
+            selectedAnswers.value.push(optionId)
+          }
+        }
+
+        announceToScreenReader(`${t('option-selected')} ${data + 1}`)
+      }
+      break
+  }
+}
+
+// Set the emit function for keyboard navigation
+setEmitFunction(handleKeyboardEvent)
 
 const quiz = ref<Quiz | null>(null)
 const currentQuestionIndex = ref(0)

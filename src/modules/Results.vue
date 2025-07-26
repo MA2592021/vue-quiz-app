@@ -1,196 +1,191 @@
 <template>
-  <v-container class="fill-height">
-    <v-row justify="center" align="center">
-      <v-col cols="12" md="10" lg="8">
-        <!-- Loading State -->
-        <div v-if="loading" class="text-center">
-          <v-progress-circular indeterminate size="64" color="primary" />
-          <p class="mt-4 text-body-1">{{ t('loading-results') }}</p>
-        </div>
+  <v-row justify="center" align="center" class="justify-center">
+    <v-col cols="12" md="10" lg="8">
+      <!-- Loading State -->
+      <div v-if="loading" class="text-center">
+        <v-progress-circular indeterminate size="64" color="primary" />
+        <p class="mt-4 text-body-1">{{ t('loading-results') }}</p>
+      </div>
 
-        <!-- Error State -->
-        <div v-else-if="error" class="text-center">
-          <v-alert type="error" variant="tonal" class="mb-4">
-            <v-icon icon="mdi-alert-circle" class="mr-2" />
-            {{ error }}
-          </v-alert>
-          <v-btn @click="goHome" color="primary">
-            <v-icon left>mdi-home</v-icon>
-            {{ t('back-to-home') }}
-          </v-btn>
-        </div>
+      <!-- Error State -->
+      <div v-else-if="error" class="text-center">
+        <v-alert type="error" variant="tonal" class="mb-4">
+          <v-icon icon="mdi-alert-circle" class="mr-2" />
+          {{ error }}
+        </v-alert>
+        <v-btn @click="goHome" color="primary">
+          <v-icon left>mdi-home</v-icon>
+          {{ t('back-to-home') }}
+        </v-btn>
+      </div>
 
-        <!-- Results Content -->
-        <div v-else-if="quiz && result">
-          <!-- Results Header -->
-          <v-card class="mb-6" color="primary" dark>
-            <v-card-title class="text-h4 text-center">
-              {{ t('quiz-results') }}
-            </v-card-title>
-            <v-card-text class="text-center text-h6">
-              {{ quiz.title }}
-            </v-card-text>
-          </v-card>
+      <!-- Results Content -->
+      <div v-else-if="quiz && result">
+        <!-- Results Header -->
+        <v-card class="mb-6" color="primary" dark>
+          <v-card-title class="text-h4 text-center">
+            {{ t('quiz-results') }}
+          </v-card-title>
+          <v-card-text class="text-center text-h6">
+            {{ quiz.title }}
+          </v-card-text>
+        </v-card>
 
-          <!-- Score Card -->
-          <v-card class="mb-6">
-            <v-card-text class="text-center">
-              <div
-                class="text-h2 font-weight-bold mb-4"
-                :class="getScoreColor()"
-              >
-                {{ Math.round(result.score) }}%
-              </div>
+        <!-- Score Card -->
+        <v-card class="mb-6">
+          <v-card-text class="text-center">
+            <div class="text-h2 font-weight-bold mb-4" :class="getScoreColor()">
+              {{ Math.round(result.score) }}%
+            </div>
 
-              <v-progress-circular
-                :model-value="result.score"
-                :color="getScoreColor()"
-                size="120"
-                width="12"
-                class="mb-4"
-              >
-                <span class="text-h6">{{ Math.round(result.score) }}%</span>
-              </v-progress-circular>
+            <v-progress-circular
+              :model-value="result.score"
+              :color="getScoreColor()"
+              size="120"
+              width="12"
+              class="mb-4"
+            >
+              <span class="text-h6">{{ Math.round(result.score) }}%</span>
+            </v-progress-circular>
 
-              <div class="text-h6 mb-2">
-                {{ result.correctAnswers }} {{ t('out-of') }}
-                {{ result.totalQuestions }} {{ t('correct') }}
-              </div>
+            <div class="text-h6 mb-2">
+              {{ result.correctAnswers }} {{ t('out-of') }}
+              {{ result.totalQuestions }} {{ t('correct') }}
+            </div>
 
-              <div class="text-body-1 text-medium-emphasis mb-2">
-                {{ t('completed-on') }} {{ formatDate(result.completedAt) }}
-              </div>
+            <div class="text-body-1 text-medium-emphasis mb-2">
+              {{ t('completed-on') }} {{ formatDate(result.completedAt) }}
+            </div>
 
-              <div class="text-body-2 text-medium-emphasis">
-                {{ t('time-elapsed') }}: {{ formatTime(result.timeElapsed) }}
-              </div>
-            </v-card-text>
-          </v-card>
+            <div class="text-body-2 text-medium-emphasis">
+              {{ t('time-elapsed') }}: {{ formatTime(result.timeElapsed) }}
+            </div>
+          </v-card-text>
+        </v-card>
 
-          <!-- Performance Summary -->
-          <v-card class="mb-6">
-            <v-card-title>{{ t('performance-summary') }}</v-card-title>
-            <v-card-text>
-              <v-row>
-                <v-col cols="12" md="4">
-                  <div class="text-center">
-                    <div class="text-h4 font-weight-bold text-success">
-                      {{ result.correctAnswers }}
-                    </div>
-                    <div class="text-body-2">{{ t('correct-answers') }}</div>
+        <!-- Performance Summary -->
+        <v-card class="mb-6">
+          <v-card-title>{{ t('performance-summary') }}</v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" md="4">
+                <div class="text-center">
+                  <div class="text-h4 font-weight-bold text-success">
+                    {{ result.correctAnswers }}
                   </div>
-                </v-col>
-                <v-col cols="12" md="4">
-                  <div class="text-center">
-                    <div class="text-h4 font-weight-bold text-error">
-                      {{ result.totalQuestions - result.correctAnswers }}
-                    </div>
-                    <div class="text-body-2">{{ t('incorrect-answers') }}</div>
-                  </div>
-                </v-col>
-                <v-col cols="12" md="4">
-                  <div class="text-center">
-                    <div class="text-h4 font-weight-bold text-primary">
-                      {{
-                        Math.round(
-                          (result.correctAnswers / result.totalQuestions) * 100
-                        )
-                      }}%
-                    </div>
-                    <div class="text-body-2">{{ t('accuracy') }}</div>
-                  </div>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-
-          <!-- Detailed Results -->
-          <v-card class="mb-6">
-            <v-card-title>{{ t('detailed-results') }}</v-card-title>
-            <v-card-text>
-              <div
-                v-for="(question, index) in quiz.questions"
-                :key="question.id"
-                class="mb-6 pa-4 rounded-lg"
-                :class="getQuestionCardClass(index)"
-              >
-                <div class="d-flex align-center mb-3">
-                  <v-icon :color="getAnswerColor(index)" class="mr-2">
-                    {{ getAnswerIcon(index) }}
-                  </v-icon>
-                  <span class="font-weight-medium"
-                    >{{ t('question') }} {{ index + 1 }}</span
-                  >
-                  <v-chip
-                    :color="getDifficultyColor(question.difficulty)"
-                    size="small"
-                    class="ms-auto"
-                  >
-                    {{ t(`difficulty-${question.difficulty}`) }}
-                  </v-chip>
+                  <div class="text-body-2">{{ t('correct-answers') }}</div>
                 </div>
+              </v-col>
+              <v-col cols="12" md="4">
+                <div class="text-center">
+                  <div class="text-h4 font-weight-bold text-error">
+                    {{ result.totalQuestions - result.correctAnswers }}
+                  </div>
+                  <div class="text-body-2">{{ t('incorrect-answers') }}</div>
+                </div>
+              </v-col>
+              <v-col cols="12" md="4">
+                <div class="text-center">
+                  <div class="text-h4 font-weight-bold text-primary">
+                    {{
+                      Math.round(
+                        (result.correctAnswers / result.totalQuestions) * 100
+                      )
+                    }}%
+                  </div>
+                  <div class="text-body-2">{{ t('accuracy') }}</div>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
 
-                <p class="text-body-1 mb-3 font-weight-medium">
-                  {{ question.question }}
-                </p>
+        <!-- Detailed Results -->
+        <v-card class="mb-6">
+          <v-card-title>{{ t('detailed-results') }}</v-card-title>
+          <v-card-text>
+            <div
+              v-for="(question, index) in quiz.questions"
+              :key="question.id"
+              class="mb-6 pa-4 rounded-lg"
+              :class="getQuestionCardClass(index)"
+            >
+              <div class="d-flex align-center mb-3">
+                <v-icon :color="getAnswerColor(index)" class="mr-2">
+                  {{ getAnswerIcon(index) }}
+                </v-icon>
+                <span class="font-weight-medium"
+                  >{{ t('question') }} {{ index + 1 }}</span
+                >
+                <v-chip
+                  :color="getDifficultyColor(question.difficulty)"
+                  size="small"
+                  class="ms-auto"
+                >
+                  {{ t(`difficulty-${question.difficulty}`) }}
+                </v-chip>
+              </div>
 
-                <div class="ml-4">
-                  <div
-                    v-for="option in question.options"
-                    :key="option.id"
-                    class="mb-2 pa-2 rounded"
-                    :class="getOptionClass(index, option.id)"
-                  >
-                    <div class="d-flex align-center">
-                      <v-icon size="small" class="mr-2">
-                        {{ getOptionIcon(index, option.id) }}
-                      </v-icon>
-                      <span>{{ option.text }}</span>
-                    </div>
+              <p class="text-body-1 mb-3 font-weight-medium">
+                {{ question.question }}
+              </p>
+
+              <div class="ml-4">
+                <div
+                  v-for="option in question.options"
+                  :key="option.id"
+                  class="mb-2 pa-2 rounded"
+                  :class="getOptionClass(index, option.id)"
+                >
+                  <div class="d-flex align-center">
+                    <v-icon size="small" class="mr-2">
+                      {{ getOptionIcon(index, option.id) }}
+                    </v-icon>
+                    <span>{{ option.text }}</span>
                   </div>
                 </div>
-
-                <div v-if="!isAnswerCorrect(index)" class="mt-3">
-                  <v-alert type="info" variant="tonal" density="compact">
-                    <template v-slot:prepend>
-                      <v-icon icon="mdi-lightbulb-outline" />
-                    </template>
-                    <strong>{{ t('explanation') }}:</strong>
-                    {{ question.explanation }}
-                  </v-alert>
-                </div>
               </div>
-            </v-card-text>
-          </v-card>
 
-          <!-- Action Buttons -->
-          <v-card>
-            <v-card-actions class="d-flex justify-space-between">
-              <v-btn @click="retakeQuiz" color="primary" variant="outlined">
-                <v-icon left>mdi-refresh</v-icon>
-                {{ t('retake-quiz') }}
-              </v-btn>
+              <div v-if="!isAnswerCorrect(index)" class="mt-3">
+                <v-alert type="info" variant="tonal" density="compact">
+                  <template v-slot:prepend>
+                    <v-icon icon="mdi-lightbulb-outline" />
+                  </template>
+                  <strong>{{ t('explanation') }}:</strong>
+                  {{ question.explanation }}
+                </v-alert>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
 
-              <v-btn
-                @click="exportResults"
-                color="success"
-                variant="outlined"
-                :loading="exporting"
-              >
-                <v-icon left>mdi-file-pdf-box</v-icon>
-                {{ t('export-results') }}
-              </v-btn>
+        <!-- Action Buttons -->
+        <v-card>
+          <v-card-actions class="d-flex justify-space-between">
+            <v-btn @click="retakeQuiz" color="primary" variant="outlined">
+              <v-icon left>mdi-refresh</v-icon>
+              {{ t('retake-quiz') }}
+            </v-btn>
 
-              <v-btn @click="goHome" color="secondary">
-                <v-icon left>mdi-home</v-icon>
-                {{ t('back-to-home') }}
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </div>
-      </v-col>
-    </v-row>
-  </v-container>
+            <v-btn
+              @click="exportResults"
+              color="success"
+              variant="outlined"
+              :loading="exporting"
+            >
+              <v-icon left>mdi-file-pdf-box</v-icon>
+              {{ t('export-results') }}
+            </v-btn>
+
+            <v-btn @click="goHome" color="secondary">
+              <v-icon left>mdi-home</v-icon>
+              {{ t('back-to-home') }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup lang="ts">

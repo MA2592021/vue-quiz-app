@@ -8,6 +8,11 @@
       @click="() => emit('previous')"
       variant="outlined"
       size="large"
+      tabindex="0"
+      @keydown="
+        (event: KeyboardEvent) => handleButtonKeyDown(event, 'previous')
+      "
+      :aria-label="t('previous-question')"
     >
       <v-icon class="me-2">{{
         isArabic ? 'mdi-arrow-right' : 'mdi-arrow-left'
@@ -22,6 +27,11 @@
         @click="() => emit('submit')"
         color="primary"
         size="large"
+        tabindex="0"
+        @keydown="
+          (event: KeyboardEvent) => handleButtonKeyDown(event, 'submit')
+        "
+        :aria-label="t('submit-answer')"
       >
         {{ t('submit') }}
         <v-icon class="ms-2">mdi-check</v-icon>
@@ -33,6 +43,9 @@
         @click="() => emit('next')"
         color="primary"
         size="large"
+        tabindex="0"
+        @keydown="(event: KeyboardEvent) => handleButtonKeyDown(event, 'next')"
+        :aria-label="t('next-question')"
       >
         {{ t('next') }}
         <v-icon class="ms-2">{{
@@ -46,6 +59,11 @@
         @click="() => emit('finish')"
         color="success"
         size="large"
+        tabindex="0"
+        @keydown="
+          (event: KeyboardEvent) => handleButtonKeyDown(event, 'finish')
+        "
+        :aria-label="t('finish-quiz')"
       >
         {{ t('finish-quiz') }}
         <v-icon class="ms-2">mdi-check</v-icon>
@@ -75,4 +93,12 @@ const emit = defineEmits<{
 }>()
 
 const isArabic = computed(() => locale.value === 'ar')
+
+// Keyboard navigation for buttons
+const handleButtonKeyDown = (event: KeyboardEvent, action: string) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    emit(action as any)
+  }
+}
 </script>

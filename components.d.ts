@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    KeyboardHelp: typeof import('./src/components/KeyboardHelp.vue')['default']
     LanguageSwitch: typeof import('./src/components/LanguageSwitch.vue')['default']
     NavigationButtons: typeof import('./src/components/NavigationButtons.vue')['default']
     ProgressBar: typeof import('./src/components/ProgressBar.vue')['default']
@@ -16,7 +17,6 @@ declare module 'vue' {
     QuizQuestion: typeof import('./src/components/QuizQuestion.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SettingsMenu: typeof import('./src/components/SettingsMenu.vue')['default']
     ThemeSwitch: typeof import('./src/components/ThemeSwitch.vue')['default']
   }
 }

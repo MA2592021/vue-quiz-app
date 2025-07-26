@@ -50,6 +50,9 @@
         size="small"
         class="text-caption text-sm-body-2"
         @click.stop="startQuiz(quiz.id)"
+        tabindex="0"
+        @keydown="(event: KeyboardEvent) => handleCardKeyDown(event, quiz.id)"
+        :aria-label="`Start ${quiz.title} quiz`"
       >
         {{ t('start-quiz') }}
       </v-btn>
@@ -86,6 +89,14 @@ const startQuiz = (quizId: string) => {
 
 const truncateTitle = (title: string) => {
   return title.length > 20 ? title.slice(0, 20) + '...' : title
+}
+
+// Keyboard navigation for quiz cards
+const handleCardKeyDown = (event: KeyboardEvent, quizId: string) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    startQuiz(quizId)
+  }
 }
 </script>
 

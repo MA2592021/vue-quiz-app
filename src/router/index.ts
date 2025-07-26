@@ -17,7 +17,12 @@ const router = createRouter({
       component: QuizView,
       props: true,
     },
-   
+    {
+      path: '/results/:id',
+      name: 'results',
+      component: ResultsView,
+      props: true,
+    },
   ],
 })
 

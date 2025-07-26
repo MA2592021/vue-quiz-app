@@ -11,12 +11,15 @@ declare module 'vue' {
     KeyboardHelp: typeof import('./src/components/KeyboardHelp.vue')['default']
     LanguageSwitch: typeof import('./src/components/LanguageSwitch.vue')['default']
     NavigationButtons: typeof import('./src/components/NavigationButtons.vue')['default']
+    PerformanceSummary: typeof import('./src/components/PerformanceSummary.vue')['default']
     ProgressBar: typeof import('./src/components/ProgressBar.vue')['default']
+    QuestionSummary: typeof import('./src/components/QuestionSummary.vue')['default']
     QuizCard: typeof import('./src/components/QuizCard.vue')['default']
     QuizHeader: typeof import('./src/components/QuizHeader.vue')['default']
     QuizQuestion: typeof import('./src/components/QuizQuestion.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ScoreCard: typeof import('./src/components/ScoreCard.vue')['default']
     ThemeSwitch: typeof import('./src/components/ThemeSwitch.vue')['default']
   }
 }

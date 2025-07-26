@@ -32,132 +32,22 @@
         </v-card>
 
         <!-- Score Card -->
-        <v-card class="mb-6">
-          <v-card-text class="text-center">
-            <div class="text-h2 font-weight-bold mb-4" :class="getScoreColor()">
-              {{ Math.round(result.score) }}%
-            </div>
-
-            <v-progress-circular
-              :model-value="result.score"
-              :color="getScoreColor()"
-              size="120"
-              width="12"
-              class="mb-4"
-            >
-              <span class="text-h6">{{ Math.round(result.score) }}%</span>
-            </v-progress-circular>
-
-            <div class="text-h6 mb-2">
-              {{ result.correctAnswers }} {{ t('out-of') }}
-              {{ result.totalQuestions }} {{ t('correct') }}
-            </div>
-
-            <div class="text-body-1 text-medium-emphasis mb-2">
-              {{ t('completed-on') }} {{ formatDate(result.completedAt) }}
-            </div>
-
-            <div class="text-body-2 text-medium-emphasis">
-              {{ t('time-elapsed') }}: {{ formatTime(result.timeElapsed) }}
-            </div>
-          </v-card-text>
-        </v-card>
+        <ScoreCard
+          :score="result.score"
+          :correctAnswers="result.correctAnswers"
+          :totalQuestions="result.totalQuestions"
+          :completedAt="result.completedAt"
+          :timeElapsed="result.timeElapsed"
+        />
 
         <!-- Performance Summary -->
-        <v-card class="mb-6">
-          <v-card-title>{{ t('performance-summary') }}</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col cols="12" md="4">
-                <div class="text-center">
-                  <div class="text-h4 font-weight-bold text-success">
-                    {{ result.correctAnswers }}
-                  </div>
-                  <div class="text-body-2">{{ t('correct-answers') }}</div>
-                </div>
-              </v-col>
-              <v-col cols="12" md="4">
-                <div class="text-center">
-                  <div class="text-h4 font-weight-bold text-error">
-                    {{ result.totalQuestions - result.correctAnswers }}
-                  </div>
-                  <div class="text-body-2">{{ t('incorrect-answers') }}</div>
-                </div>
-              </v-col>
-              <v-col cols="12" md="4">
-                <div class="text-center">
-                  <div class="text-h4 font-weight-bold text-primary">
-                    {{
-                      Math.round(
-                        (result.correctAnswers / result.totalQuestions) * 100
-                      )
-                    }}%
-                  </div>
-                  <div class="text-body-2">{{ t('accuracy') }}</div>
-                </div>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
+        <PerformanceSummary
+          :correctAnswers="result.correctAnswers"
+          :totalQuestions="result.totalQuestions"
+        />
 
         <!-- Detailed Results -->
-        <v-card class="mb-6">
-          <v-card-title>{{ t('detailed-results') }}</v-card-title>
-          <v-card-text>
-            <div
-              v-for="(question, index) in quiz.questions"
-              :key="question.id"
-              class="mb-6 pa-4 rounded-lg"
-              :class="getQuestionCardClass(index)"
-            >
-              <div class="d-flex align-center mb-3">
-                <v-icon :color="getAnswerColor(index)" class="mr-2">
-                  {{ getAnswerIcon(index) }}
-                </v-icon>
-                <span class="font-weight-medium"
-                  >{{ t('question') }} {{ index + 1 }}</span
-                >
-                <v-chip
-                  :color="getDifficultyColor(question.difficulty)"
-                  size="small"
-                  class="ms-auto"
-                >
-                  {{ t(`difficulty-${question.difficulty}`) }}
-                </v-chip>
-              </div>
-
-              <p class="text-body-1 mb-3 font-weight-medium">
-                {{ question.question }}
-              </p>
-
-              <div class="ml-4">
-                <div
-                  v-for="option in question.options"
-                  :key="option.id"
-                  class="mb-2 pa-2 rounded"
-                  :class="getOptionClass(index, option.id)"
-                >
-                  <div class="d-flex align-center">
-                    <v-icon size="small" class="mr-2">
-                      {{ getOptionIcon(index, option.id) }}
-                    </v-icon>
-                    <span>{{ option.text }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div v-if="!isAnswerCorrect(index)" class="mt-3">
-                <v-alert type="info" variant="tonal" density="compact">
-                  <template v-slot:prepend>
-                    <v-icon icon="mdi-lightbulb-outline" />
-                  </template>
-                  <strong>{{ t('explanation') }}:</strong>
-                  {{ question.explanation }}
-                </v-alert>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
+        <QuestionSummary :result="result" :quiz="quiz" />
 
         <!-- Action Buttons -->
         <v-card>
@@ -192,16 +82,12 @@
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Quiz, QuizResult } from '../types/quiz'
-import {
-  getQuizById,
-  getDifficultyColor,
-  validateAnswer,
-  getResultIcon,
-  getResultColor,
-} from '@/utils/quiz'
+import { getQuizById } from '@/utils/quiz'
 import { getFromStorage, removeFromStorage } from '@/utils/storage'
-import { formatDate, formatTime } from '@/utils/formatTime'
 import { generateQuizResultsPDF } from '@/utils/pdfExport'
+import ScoreCard from '@/components/ScoreCard.vue'
+import PerformanceSummary from '@/components/PerformanceSummary.vue'
+import QuestionSummary from '@/components/QuizSummary.vue'
 
 const { t } = useI18n()
 const emit = defineEmits<{
@@ -250,143 +136,6 @@ const loadData = async () => {
       err instanceof Error ? err.message : t('error-loading-results')
   } finally {
     loading.value = false
-  }
-}
-
-const getScoreColor = () => {
-  const score = result.value?.score || 0
-
-  if (score >= 80) return 'success'
-  if (score >= 60) return 'warning'
-
-  return 'error'
-}
-
-const getAnswerColor = (questionIndex: number) => {
-  if (!result.value || !quiz.value) return 'grey'
-
-  try {
-    const userAnswer = result.value.answers[questionIndex]
-    const question = quiz.value.questions[questionIndex]
-
-    if (!userAnswer || !question) return 'grey'
-
-    // Use the shared validation function
-    const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
-    const isCorrect = validateAnswer(question, userAnswers)
-
-    return getResultColor(isCorrect)
-  } catch (err) {
-    console.error('Error getting answer color:', err)
-
-    return 'grey'
-  }
-}
-
-const getAnswerIcon = (questionIndex: number) => {
-  if (!result.value || !quiz.value) return 'mdi-help-circle'
-
-  try {
-    const userAnswer = result.value.answers[questionIndex]
-    const question = quiz.value.questions[questionIndex]
-
-    if (!userAnswer || !question) return 'mdi-help-circle'
-
-    const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
-    const isCorrect = validateAnswer(question, userAnswers)
-
-    return getResultIcon(isCorrect)
-  } catch (err) {
-    console.error('Error getting answer icon:', err)
-
-    return 'mdi-help-circle'
-  }
-}
-
-const getOptionClass = (questionIndex: number, answerId: string) => {
-  if (!result.value || !quiz.value) return ''
-
-  try {
-    const userAnswer = result.value.answers[questionIndex]
-    const question = quiz.value.questions[questionIndex]
-
-    if (!userAnswer || !question) return ''
-
-    const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
-    const correctAnswerIds = question.correctAnswerIds
-
-    const isCorrect = correctAnswerIds.includes(answerId)
-    const isSelected = userAnswers.includes(answerId)
-
-    if (isCorrect && isSelected) {
-      return 'text-success font-weight-bold'
-    } else if (isCorrect && !isSelected) {
-      return 'text-success'
-    } else if (!isCorrect && isSelected) {
-      return 'text-error font-weight-bold'
-    }
-
-    return ''
-  } catch (err) {
-    console.error('Error getting option class:', err)
-
-    return ''
-  }
-}
-
-const getOptionIcon = (questionIndex: number, answerId: string) => {
-  if (!result.value || !quiz.value) return 'mdi-circle-outline'
-
-  try {
-    const userAnswer = result.value.answers[questionIndex]
-    const question = quiz.value.questions[questionIndex]
-
-    if (!userAnswer || !question) return 'mdi-circle-outline'
-
-    const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
-    const correctAnswerIds = question.correctAnswerIds
-
-    const isCorrect = correctAnswerIds.includes(answerId)
-    const isSelected = userAnswers.includes(answerId)
-
-    if (isCorrect && isSelected) {
-      return getResultIcon(true)
-    } else if (isCorrect && !isSelected) {
-      return getResultIcon(true)
-    } else if (!isCorrect && isSelected) {
-      return getResultIcon(false)
-    }
-
-    return 'mdi-circle-outline'
-  } catch (err) {
-    console.error('Error getting option icon:', err)
-
-    return 'mdi-circle-outline'
-  }
-}
-
-const getQuestionCardClass = (questionIndex: number) => {
-  const isCorrect = isAnswerCorrect(questionIndex)
-
-  return isCorrect ? 'bg-green-lighten-5' : 'bg-red-lighten-4'
-}
-
-const isAnswerCorrect = (questionIndex: number) => {
-  if (!result.value || !quiz.value) return false
-
-  try {
-    const userAnswer = result.value.answers[questionIndex]
-    const question = quiz.value.questions[questionIndex]
-
-    if (!userAnswer || !question) return false
-
-    const userAnswers = Array.isArray(userAnswer) ? userAnswer : [userAnswer]
-
-    return validateAnswer(question, userAnswers)
-  } catch (err) {
-    console.error('Error checking if answer is correct:', err)
-
-    return false
   }
 }
 

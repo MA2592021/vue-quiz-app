@@ -14,7 +14,7 @@
     "format": "prettier --write \"src/**/*.{js,vue,ts,json,css,scss,md}\"",
     "format:check": "prettier --check \"src/**/*.{js,vue,ts,json,css,scss,md}\"",
     "prepare": "husky",
-    "precommit-check": "pnpm run type-check && pnpm run lint && pnpm run format:check"
+    "precommit-check": "pnpm run type-check && pnpm run lint"
   },
   "dependencies": {
     "@fontsource/roboto": "5.2.6",

@@ -1,7 +1,7 @@
 <template>
   <div v-if="currentQuestion" class="mb-6">
     <div class="d-flex justify-space-between align-center">
-      <div style="max-width: 85%">
+      <div class="w-75">
         <h2 class="text-h5 text-sm-h4 font-weight-bold mb-4">
           {{ currentQuestion.question }}
         </h2>

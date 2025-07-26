@@ -45,5 +45,6 @@
   "question": "Question",
   "time-remaining": "Time Remaining",
   "of": "of",
-  "select-multiple-answers": "Select more than one answer"
+  "select-multiple-answers": "Select more than one answer",
+  "export-results": "Export Results"
 }

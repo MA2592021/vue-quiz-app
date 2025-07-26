@@ -62,6 +62,7 @@ import { useRouter } from 'vue-router'
 import type { QuizMetadata } from '../types/quiz'
 import { formatTime } from '@/utils/formatTime'
 import { getDifficultyColor } from '@/utils/quiz'
+import { removeQuizProgress, removeFromStorage } from '@/utils/storage'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -71,6 +72,15 @@ defineProps<{
 }>()
 
 const startQuiz = (quizId: string) => {
+  // Clear any existing progress for this quiz
+  removeQuizProgress(quizId)
+
+  // Clear timer data for this quiz
+  const timerKey = `quiz_timer_${quizId}`
+
+  removeFromStorage(timerKey)
+
+  // Navigate to the quiz
   router.push(`/quiz/${quizId}`)
 }
 

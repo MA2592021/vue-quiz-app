@@ -171,6 +171,16 @@
                 {{ t('retake-quiz') }}
               </v-btn>
 
+              <v-btn
+                @click="exportResults"
+                color="success"
+                variant="outlined"
+                :loading="exporting"
+              >
+                <v-icon left>mdi-file-pdf-box</v-icon>
+                {{ t('export-results') }}
+              </v-btn>
+
               <v-btn @click="goHome" color="secondary">
                 <v-icon left>mdi-home</v-icon>
                 {{ t('back-to-home') }}
@@ -196,6 +206,7 @@ import {
 } from '@/utils/quiz'
 import { getFromStorage, removeFromStorage } from '@/utils/storage'
 import { formatDate, formatTime } from '@/utils/formatTime'
+import { generateQuizResultsPDF } from '@/utils/pdfExport'
 
 const { t } = useI18n()
 const emit = defineEmits<{
@@ -211,6 +222,7 @@ const quiz = ref<Quiz | null>(null)
 const result = ref<QuizResult | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
+const exporting = ref(false)
 
 // Load quiz and result data
 const loadData = async () => {
@@ -392,6 +404,24 @@ const retakeQuiz = () => {
 
 const goHome = () => {
   emit('goHome')
+}
+
+const exportResults = async () => {
+  if (!quiz.value || !result.value) return
+
+  try {
+    exporting.value = true
+    await generateQuizResultsPDF({
+      quiz: quiz.value,
+      result: result.value,
+      language: quiz.value.language,
+    })
+  } catch (error) {
+    console.error('Error exporting results:', error)
+    // You could add a toast notification here
+  } finally {
+    exporting.value = false
+  }
 }
 
 onMounted(() => {

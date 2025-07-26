@@ -45,5 +45,6 @@
   "question": "السؤال",
   "time-remaining": "الوقت المتبقي",
   "of": "من أصل",
-  "select-multiple-answers": "اختر أكثر من إجابة"
+  "select-multiple-answers": "اختر أكثر من إجابة",
+  "export-results": "تصدير النتائج"
 }

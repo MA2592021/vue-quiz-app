@@ -1,6 +1,7 @@
 import { createI18n } from 'vue-i18n'
 import en from '../locales/en.json'
 import ar from '../locales/ar.json'
+import { getFromStorage, saveToStorage } from '@/utils/storage'
 
 export const i18n = createI18n({
   legacy: false,
@@ -13,13 +14,13 @@ export const i18n = createI18n({
 })
 
 function getLocale() {
-  const locale = localStorage.getItem(btoa('locale'))
+  const locale = getFromStorage('locale')
   if (!locale) {
-    localStorage.setItem(btoa('locale'), btoa('en'))
+    saveToStorage('locale', 'en')
     return 'en'
   }
-  return atob(locale)
+  return locale
 }
 export function setLocale(locale: string) {
-  localStorage.setItem(btoa('locale'), btoa(locale))
+  saveToStorage('locale', locale)
 }

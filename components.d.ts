@@ -9,7 +9,11 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     LanguageSwitch: typeof import('./src/components/LanguageSwitch.vue')['default']
+    NavigationButtons: typeof import('./src/components/NavigationButtons.vue')['default']
+    ProgressBar: typeof import('./src/components/ProgressBar.vue')['default']
     QuizCard: typeof import('./src/components/QuizCard.vue')['default']
+    QuizHeader: typeof import('./src/components/QuizHeader.vue')['default']
+    QuizQuestion: typeof import('./src/components/QuizQuestion.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SettingsMenu: typeof import('./src/components/SettingsMenu.vue')['default']

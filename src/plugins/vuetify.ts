@@ -10,6 +10,7 @@ import 'vuetify/styles'
 
 // Composables
 import { createVuetify } from 'vuetify'
+import { getFromStorage, saveToStorage } from '@/utils/storage'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -18,12 +19,12 @@ export default createVuetify({
     themes: {
       light: {
         colors: {
-          bgPrimary: '#e9ecef', 
+          bgPrimary: '#e9ecef',
         },
       },
       dark: {
         colors: {
-          bgPrimary: '#121212', 
+          bgPrimary: '#121212',
         },
       },
     },
@@ -31,13 +32,13 @@ export default createVuetify({
 })
 
 function getTheme() {
-  const theme = localStorage.getItem(btoa('theme'))
+  const theme = getFromStorage('theme')
   if (!theme) {
     return 'system'
   }
-  return atob(theme)
+  return theme
 }
 
 export function setTheme(theme: string) {
-  localStorage.setItem(btoa('theme'), btoa(theme))
+  saveToStorage('theme', theme)
 }

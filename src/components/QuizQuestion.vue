@@ -1,0 +1,170 @@
+<template>
+  <div v-if="currentQuestion" class="mb-6">
+    <h2 class="text-h5 text-sm-h4 font-weight-bold mb-4">
+      {{ currentQuestion.question }}
+    </h2>
+
+    <!-- Single Choice -->
+    <v-radio-group
+      v-if="isSingleChoiceQuestion"
+      v-model="selectedAnswer"
+      :disabled="isAnswerSubmitted"
+    >
+      <v-radio
+        v-for="(option, index) in currentQuestionOptions"
+        :key="index"
+        :label="option"
+        :value="index"
+        class="mb-3"
+        :color="getOptionState(index).color"
+        :class="getOptionState(index).classes"
+        @click="emit('singleChoiceAnswer', index)"
+      >
+        <template v-slot:label>
+          <span :class="getOptionState(index).textClasses">
+            {{ option }}
+          </span>
+        </template>
+      </v-radio>
+    </v-radio-group>
+
+    <!-- Multiple Choice -->
+    <div v-else-if="isMultipleChoiceQuestion">
+      <v-checkbox
+        v-for="(option, index) in currentQuestionOptions"
+        :key="index"
+        :label="option"
+        :model-value="isOptionSelected(index)"
+        @update:model-value="
+          (checked) => emit('multipleChoiceAnswer', index, checked || false)
+        "
+        :color="getOptionState(index).color"
+        :class="getOptionState(index).classes"
+        class="mb-1"
+        :disabled="isAnswerSubmitted"
+        density="compact"
+      >
+        <template v-slot:label>
+          <span :class="getOptionState(index).textClasses">
+            {{ option }}
+          </span>
+        </template>
+      </v-checkbox>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { Question } from '@/types/quiz'
+import { computed } from 'vue'
+
+const props = defineProps<{
+  currentQuestion: Question
+  isSingleChoiceQuestion: boolean
+  isMultipleChoiceQuestion: boolean
+  isAnswerSubmitted: boolean
+  currentQuestionOptions: string[]
+}>()
+
+const selectedAnswer = defineModel<number>('selectedAnswer')
+const selectedAnswers = defineModel<number[]>('selectedAnswers')
+
+const emit = defineEmits<{
+  (_e: 'singleChoiceAnswer', _index: number): void
+  (_e: 'multipleChoiceAnswer', _index: number, _checked: boolean): void
+}>()
+
+const isSingleChoice = computed(() => props.currentQuestion?.type === 'single')
+
+const getOptionState = (index: number) => {
+  if (!props.isAnswerSubmitted) {
+    return {
+      color: 'primary',
+      classes: '',
+      textClasses: '',
+    }
+  }
+
+  const isCorrect = props.currentQuestion?.correctAnswers.includes(index)
+  const isSelected = isSingleChoice.value
+    ? selectedAnswer.value === index
+    : selectedAnswers.value?.includes(index) || false
+
+  return {
+    color: isCorrect
+      ? 'success'
+      : isSelected && !isCorrect
+        ? 'error'
+        : 'primary',
+    classes: isCorrect
+      ? 'correct-answer'
+      : isSelected && !isCorrect
+        ? 'incorrect-answer'
+        : '',
+    textClasses: isCorrect
+      ? 'text-success font-weight-bold'
+      : isSelected && !isCorrect
+        ? 'text-error font-weight-bold'
+        : '',
+  }
+}
+
+const isOptionSelected = (index: number) => {
+  return selectedAnswers.value?.includes(index) || false
+}
+</script>
+
+<style scoped>
+.correct-answer {
+  animation: correctShake 0.6s ease-in-out;
+}
+
+.incorrect-answer {
+  animation: incorrectShake 0.6s ease-in-out;
+}
+
+@keyframes correctShake {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(5px);
+  }
+  75% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes incorrectShake {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-5px);
+  }
+  75% {
+    transform: translateY(5px);
+  }
+}
+
+/* Smooth transitions for option colors */
+.v-radio,
+.v-checkbox {
+  transition: all 0.3s ease;
+}
+
+/* styling for correct/incorrect answers */
+.v-radio.correct-answer,
+.v-checkbox.correct-answer {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+}
+
+.v-radio.incorrect-answer,
+.v-checkbox.incorrect-answer {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-radius: 8px;
+}
+</style>

@@ -10,7 +10,7 @@
       "type": "single",
       "question": "Which keyword is used to declare a constant in JavaScript?",
       "options": ["var", "let", "const", "define"],
-      "correctAnswers": ["const"],
+      "correctAnswers": [2],
       "difficulty": "easy"
     },
     {
@@ -18,7 +18,7 @@
       "type": "single",
       "question": "What is the result of `typeof NaN`?",
       "options": ["number", "NaN", "undefined", "object"],
-      "correctAnswers": ["number"],
+      "correctAnswers": [0],
       "difficulty": "medium"
     },
     {
@@ -26,7 +26,7 @@
       "type": "multiple",
       "question": "Which of the following are primitive data types in JavaScript?",
       "options": ["String", "Object", "Number", "Boolean"],
-      "correctAnswers": ["String", "Number", "Boolean"],
+      "correctAnswers": [0, 2, 3],
       "difficulty": "medium"
     },
     {
@@ -39,7 +39,7 @@
         "Convert a JavaScript object to a JSON string",
         "Format a number to a string"
       ],
-      "correctAnswers": ["Convert a JavaScript object to a JSON string"],
+      "correctAnswers": [2],
       "difficulty": "easy"
     },
     {
@@ -47,7 +47,7 @@
       "type": "multiple",
       "question": "Which array methods do not modify the original array?",
       "options": ["map()", "filter()", "push()", "slice()"],
-      "correctAnswers": ["map()", "filter()", "slice()"],
+      "correctAnswers": [0, 1, 3],
       "difficulty": "hard"
     },
     {
@@ -55,7 +55,7 @@
       "type": "single",
       "question": "What is the output of `typeof null` in JavaScript?",
       "options": ["null", "undefined", "object", "function"],
-      "correctAnswers": ["object"],
+      "correctAnswers": [2],
       "difficulty": "medium"
     },
     {
@@ -63,7 +63,7 @@
       "type": "single",
       "question": "Which method can be used to convert a string to an integer?",
       "options": ["Number()", "parseInt()", "parseFloat()", "toInteger()"],
-      "correctAnswers": ["parseInt()"],
+      "correctAnswers": [1],
       "difficulty": "easy"
     },
     {
@@ -71,7 +71,7 @@
       "type": "single",
       "question": "Which of these values are falsy in JavaScript?",
       "options": ["0", "false", "null", "All of the above"],
-      "correctAnswers": ["All of the above"],
+      "correctAnswers": [3],
       "difficulty": "easy"
     }
   ]

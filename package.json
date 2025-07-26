@@ -12,8 +12,9 @@
     "lint": "eslint --ext .js,.vue src",
     "lint:fix": "eslint --ext .js,.vue src --fix",
     "format": "prettier --write \"src/**/*.{js,vue,ts,json,css,scss,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,vue,ts,json,css,scss,md}\"",
     "prepare": "husky",
-    "precommit-check": "pnpm run type-check && pnpm run lint && pnpm run format"
+    "precommit-check": "pnpm run type-check && pnpm run lint && pnpm run format:check"
   },
   "dependencies": {
     "@fontsource/roboto": "5.2.6",

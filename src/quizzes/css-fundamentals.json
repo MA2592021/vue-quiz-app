@@ -1,0 +1,83 @@
+{
+  "id": "css-fundamentals",
+  "title": "CSS Fundamentals",
+  "description": "Assess your knowledge of core CSS concepts and syntax",
+  "categories": ["frontend", "design"],
+  "difficulty": "beginner",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which property is used to change the text color in CSS?",
+      "options": ["font-color", "text-style", "color", "text-color"],
+      "correctAnswers": ["color"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "Which unit is relative to the font size of the element?",
+      "options": ["px", "em", "rem", "%"],
+      "correctAnswers": ["em"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "type": "multiple",
+      "question": "Which of the following are valid CSS position values?",
+      "options": ["static", "relative", "absolute", "center"],
+      "correctAnswers": ["static", "relative", "absolute"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What does the `z-index` property control?",
+      "options": [
+        "Element scaling",
+        "Font boldness",
+        "Stacking order of elements",
+        "Text alignment"
+      ],
+      "correctAnswers": ["Stacking order of elements"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "Which CSS rule selects all `<p>` elements inside a `<div>`?",
+      "options": ["div + p", "div p", "div > p", "p div"],
+      "correctAnswers": ["div p"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 6,
+      "type": "multiple",
+      "question": "Which CSS properties can be used to make text bold?",
+      "options": ["font-weight", "font-style", "text-transform", "strong"],
+      "correctAnswers": ["font-weight"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "How do you apply a class named 'highlight' to an element in CSS?",
+      "options": ["#highlight", ".highlight", "@highlight", "*highlight"],
+      "correctAnswers": [".highlight"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What does `display: flex` do?",
+      "options": [
+        "Aligns text to the center",
+        "Enables a flex container layout",
+        "Makes elements float",
+        "Applies fixed positioning"
+      ],
+      "correctAnswers": ["Enables a flex container layout"],
+      "difficulty": "medium"
+    }
+  ]
+}

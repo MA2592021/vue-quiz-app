@@ -1,0 +1,21 @@
+{
+  "message": {
+    "hello": "hello world"
+  },
+  "language-switcher": "Language Switcher",
+  "theme-switcher": "Theme Switcher",
+  "settings": "Settings",
+  "dark-theme": "Dark Theme",
+  "light-theme": "Light Theme",
+  "quiz-master": "Quiz Master",
+  "start-quiz": "Start Quiz",
+  "difficulty-beginner": "Beginner",
+  "difficulty-intermediate": "Intermediate",
+  "difficulty-advanced": "Advanced",
+  "category-programming": "Programming",
+  "category-frontend": "Frontend",
+  "category-design": "Design",
+  "welcome-to-quiz-master": "Welcome to Quiz Master!",
+  "test-your-knowledge-with-our-interactive-quizzes": "Test your knowledge with our interactive quizzes. Choose a quiz below to get started!",
+  "no-quizzes-available-at-the-moment": "No quizzes available at the moment. Please check back later!"
+}

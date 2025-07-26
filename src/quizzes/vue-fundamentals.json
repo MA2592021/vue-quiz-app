@@ -1,0 +1,90 @@
+{
+  "id": "vue-fundamentals",
+  "title": "Vue Fundamentals",
+  "description": "Test your understanding of the Vue.js framework fundamentals",
+  "categories": ["programming", "frontend"],
+  "difficulty": "intermediate",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "What is the correct syntax for data binding in Vue templates?",
+      "options": [
+        "{{ message }}",
+        "[[ message ]]",
+        "{ message }",
+        "<% message %>"
+      ],
+      "correctAnswers": ["{{ message }}"],
+      "difficulty": "easy"
+    },
+    {
+      "type": "single",
+      "id": 2,
+      "question": "Which directive is used to conditionally render an element in Vue?",
+      "options": ["v-if", "v-show", "v-model", "v-bind"],
+      "correctAnswers": ["v-if"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 3,
+      "type": "multiple",
+      "question": "Which of the following are Vue 3 composition API features?",
+      "options": ["ref()", "reactive()", "data()", "computed()"],
+      "correctAnswers": ["ref()", "reactive()", "computed()"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "Which directive is used for two-way binding in Vue?",
+      "options": ["v-if", "v-on", "v-bind", "v-model"],
+      "correctAnswers": ["v-model"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "What does the `setup()` function in Vue 3 do?",
+      "options": [
+        "Defines computed properties",
+        "Replaces the template block",
+        "Initializes reactive state and composition functions",
+        "Mounts the component to the DOM"
+      ],
+      "correctAnswers": [
+        "Initializes reactive state and composition functions"
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": 6,
+      "type": "multiple",
+      "question": "Which lifecycle hooks are available in the Vue 3 Composition API?",
+      "options": ["onMounted", "onUpdated", "created", "onUnmounted"],
+      "correctAnswers": ["onMounted", "onUpdated", "onUnmounted"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "Which directive is used to loop over items in Vue templates?",
+      "options": ["v-if", "v-for", "v-loop", "v-each"],
+      "correctAnswers": ["v-for"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "What is the role of `emit` in Vue components?",
+      "options": [
+        "Send HTTP requests",
+        "Share state between components",
+        "Trigger parent component events",
+        "Register a global component"
+      ],
+      "correctAnswers": ["Trigger parent component events"],
+      "difficulty": "medium"
+    }
+  ]
+}

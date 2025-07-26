@@ -1,0 +1,21 @@
+{
+  "message": {
+    "hello": "مرحبا بالعالم"
+  },
+  "language-switcher": "تغيير اللغة",
+  "theme-switcher": "تغيير السمة",
+  "settings": "الإعدادات",
+  "dark-theme": "السمة الداكنة",
+  "light-theme": "السمة الفاتحة",
+  "quiz-master": "كويز ماستر",
+  "start-quiz": "ابدأ الاختبار",
+  "difficulty-beginner": "مبتدئ",
+  "difficulty-intermediate": "متوسط",
+  "difficulty-advanced": "متقدم",
+  "category-programming": "برمجة",
+  "category-frontend": "واجهة المستخدم",
+  "category-design": "تصميم",
+  "welcome-to-quiz-master": "مرحبا بك في كويز ماستر!",
+  "test-your-knowledge-with-our-interactive-quizzes": "اختبر معرفتك مع اختباراتنا التفاعلية. اختر اختباراً أدناه للبدء!",
+  "no-quizzes-available-at-the-moment": "لا يوجد اختبارات متاحة حالياً. يرجى التحقق مرة أخرى لاحقاً!"
+}

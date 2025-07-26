@@ -1,0 +1,78 @@
+{
+  "id": "javascript-fundamentals",
+  "title": "JS Fundamentals",
+  "description": "Test your understanding of JavaScript fundamentals",
+  "categories": ["programming"],
+  "difficulty": "beginner",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Which keyword is used to declare a constant in JavaScript?",
+      "options": ["var", "let", "const", "define"],
+      "correctAnswers": ["const"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "What is the result of `typeof NaN`?",
+      "options": ["number", "NaN", "undefined", "object"],
+      "correctAnswers": ["number"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "type": "multiple",
+      "question": "Which of the following are primitive data types in JavaScript?",
+      "options": ["String", "Object", "Number", "Boolean"],
+      "correctAnswers": ["String", "Number", "Boolean"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "What is the purpose of `JSON.stringify()` in JavaScript?",
+      "options": [
+        "Convert a string to JSON",
+        "Parse JSON into a JavaScript object",
+        "Convert a JavaScript object to a JSON string",
+        "Format a number to a string"
+      ],
+      "correctAnswers": ["Convert a JavaScript object to a JSON string"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 5,
+      "type": "multiple",
+      "question": "Which array methods do not modify the original array?",
+      "options": ["map()", "filter()", "push()", "slice()"],
+      "correctAnswers": ["map()", "filter()", "slice()"],
+      "difficulty": "hard"
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "What is the output of `typeof null` in JavaScript?",
+      "options": ["null", "undefined", "object", "function"],
+      "correctAnswers": ["object"],
+      "difficulty": "medium"
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "Which method can be used to convert a string to an integer?",
+      "options": ["Number()", "parseInt()", "parseFloat()", "toInteger()"],
+      "correctAnswers": ["parseInt()"],
+      "difficulty": "easy"
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "Which of these values are falsy in JavaScript?",
+      "options": ["0", "false", "null", "All of the above"],
+      "correctAnswers": ["All of the above"],
+      "difficulty": "easy"
+    }
+  ]
+}

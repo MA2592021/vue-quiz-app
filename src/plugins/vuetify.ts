@@ -14,6 +14,25 @@ import { createVuetify } from 'vuetify'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'system',
+    defaultTheme: getTheme(),
+    themes: {
+      light: {
+        colors: {
+          bgPrimary: '#e9ecef', // slightly darker off-white
+        },
+      },
+    },
   },
 })
+
+function getTheme() {
+  const theme = localStorage.getItem(btoa('theme'))
+  if (!theme) {
+    return 'system'
+  }
+  return atob(theme)
+}
+
+export function setTheme(theme: string) {
+  localStorage.setItem(btoa('theme'), btoa(theme))
+}

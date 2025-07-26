@@ -14,13 +14,13 @@ const router = createRouter({
     {
       path: '/quiz/:id',
       name: 'quiz',
-      component: QuizView,
+      component: () => import('../views/QuizView.vue'),
       props: true,
     },
     {
       path: '/results/:id',
       name: 'results',
-      component: ResultsView,
+      component: () => import('../views/ResultsView.vue'),
       props: true,
     },
   ],

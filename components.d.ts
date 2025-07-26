@@ -13,7 +13,6 @@ declare module 'vue' {
     NavigationButtons: typeof import('./src/components/NavigationButtons.vue')['default']
     PerformanceSummary: typeof import('./src/components/PerformanceSummary.vue')['default']
     ProgressBar: typeof import('./src/components/ProgressBar.vue')['default']
-    QuestionSummary: typeof import('./src/components/QuestionSummary.vue')['default']
     QuizCard: typeof import('./src/components/QuizCard.vue')['default']
     QuizHeader: typeof import('./src/components/QuizHeader.vue')['default']
     QuizQuestion: typeof import('./src/components/QuizQuestion.vue')['default']

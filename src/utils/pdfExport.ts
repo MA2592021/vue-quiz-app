@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf'
 import type { Quiz, QuizResult } from '../types/quiz'
 import { formatTime } from './formatTime'
+import { getQuizByIdAndLanguage } from './quiz'
 
 export interface PDFExportData {
   quiz: Quiz
@@ -12,6 +13,12 @@ export const generateQuizResultsPDF = async (
   data: PDFExportData
 ): Promise<void> => {
   const { quiz, result, language } = data
+
+  // Always get the English version of the quiz for PDF export
+  const englishQuiz = await getQuizByIdAndLanguage(quiz.id, 'en')
+  if (!englishQuiz) {
+    throw new Error('English version of quiz not found')
+  }
 
   // Create PDF
   const pdf = new jsPDF('p', 'mm', 'a4')
@@ -128,14 +135,14 @@ export const generateQuizResultsPDF = async (
 
   // Add title
   addText('Quiz Results Report', 20, true)
-  addText(quiz.title, 16, true)
+  addText(englishQuiz.title, 16, true)
 
   // Add quiz information
   addText('Quiz Information:', 14, true)
-  addText(`Description: ${quiz.description}`, 10, false)
-  addText(`Difficulty: ${quiz.difficulty}`, 10, false)
-  addText(`Categories: ${quiz.categories.join(', ')}`, 10, false)
-  addText(`Time Limit: ${formatTime(quiz.timeLimit)}`, 10, false)
+  addText(`Description: ${englishQuiz.description}`, 10, false)
+  addText(`Difficulty: ${englishQuiz.difficulty}`, 10, false)
+  addText(`Categories: ${englishQuiz.categories.join(', ')}`, 10, false)
+  addText(`Time Limit: ${formatTime(englishQuiz.timeLimit)}`, 10, false)
   addText(`Time Elapsed: ${formatTime(result.timeElapsed)}`, 10, false)
 
   // Add performance summary
@@ -153,7 +160,7 @@ export const generateQuizResultsPDF = async (
   addText('Detailed Results:', 14, true)
 
   // Add each question
-  quiz.questions.forEach((question, index) => {
+  englishQuiz.questions.forEach((question, index) => {
     addQuestion(question, index)
   })
 
@@ -170,7 +177,7 @@ export const generateQuizResultsPDF = async (
   )
 
   // Save PDF
-  const fileName = `quiz-results-${quiz.title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`
+  const fileName = `quiz-results-${englishQuiz.title.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`
   pdf.save(fileName)
 }
 

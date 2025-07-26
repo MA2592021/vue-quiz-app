@@ -2,6 +2,10 @@
 
 A modern, accessible quiz application built with Vue 3, TypeScript, and Vuetify. Features include multi-language support (English/Arabic), keyboard navigation, theme switching, and PDF export functionality.
 
+## 📹 Explanation Video
+
+Watch the [explanation video](https://youtu.be/gMreHHkJrYc) (in Arabic) to see the app in action and learn about its features and implementation details.
+
 ## 🚀 Features
 
 - **Multi-language Support**: English and Arabic with RTL layout support

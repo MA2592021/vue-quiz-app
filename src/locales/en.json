@@ -44,5 +44,6 @@
   "finish-quiz": "Finish Quiz",
   "question": "Question",
   "time-remaining": "Time Remaining",
-  "of": "of"
+  "of": "of",
+  "select-multiple-answers": "Select more than one answer"
 }

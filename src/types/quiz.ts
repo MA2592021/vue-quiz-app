@@ -41,6 +41,6 @@ export interface QuizResult {
   totalQuestions: number
   correctAnswers: number
   timeElapsed: number
-  answers: (number | number[])[]
+  answers: (number | number[] | null)[]
   completedAt: Date
 }

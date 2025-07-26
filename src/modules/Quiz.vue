@@ -50,7 +50,12 @@ import { useI18n } from 'vue-i18n'
 import type { Question, Quiz, QuizResult } from '../types/quiz'
 import { useSecureTimer } from '../utils/timer'
 import { getQuizById, validateQuestionAnswer } from '@/utils/quiz'
-import { saveToStorage } from '@/utils/storage'
+import {
+  saveToStorage,
+  saveQuizProgress,
+  getQuizProgress,
+  removeQuizProgress,
+} from '@/utils/storage'
 import QuizQuestion from '@/components/QuizQuestion.vue'
 import NavigationButtons from '@/components/NavigationButtons.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
@@ -70,7 +75,7 @@ const emit = defineEmits<{
 const quiz = ref<Quiz | null>(null)
 const currentQuestionIndex = ref(0)
 const selectedAnswers = ref<Question['correctAnswers']>([])
-const answers = ref<(number | number[])[]>([])
+const answers = ref<(number | number[] | null)[]>([])
 const isAnswerSubmitted = ref(false)
 const isAnswerCorrect = ref(false)
 
@@ -108,10 +113,11 @@ const questionProgressText = computed(() => {
   return `${t('question')} ${current} ${t('of')} ${total}`
 })
 const progressPercentage = computed(() => {
-  const current = currentQuestionIndex.value
   const total = quiz.value?.questions.length || 1
+  // Count how many answers have been submitted (not null)
+  const submittedCount = answers.value.filter((a) => a !== null).length
 
-  return Math.round((current / total) * 100)
+  return Math.round((submittedCount / total) * 100)
 })
 const isAnswerSelected = computed(() => {
   if (!currentQuestion.value) return false
@@ -148,6 +154,9 @@ const submitAnswer = async () => {
   isAnswerSubmitted.value = true
   // Save the answer
   answers.value[currentQuestionIndex.value] = [...selectedAnswers.value]
+
+  // Save progress to localStorage
+  saveProgress()
 }
 
 const loadQuiz = async () => {
@@ -156,6 +165,10 @@ const loadQuiz = async () => {
 
     quiz.value = quizData
     answers.value = new Array(quiz.value?.questions.length || 0).fill(null)
+
+    // Load saved progress
+    loadSavedProgress()
+
     if (!isRunning.value && !hasExistingData()) {
       startTimer()
     }
@@ -170,6 +183,35 @@ const loadQuiz = async () => {
     console.error('Error loading quiz:', error)
     emit('error')
   }
+}
+
+const loadSavedProgress = () => {
+  const savedProgress = getQuizProgress(props.quizId)
+
+  if (savedProgress && quiz.value) {
+    // Restore quiz state
+    currentQuestionIndex.value = savedProgress.currentQuestionIndex
+    answers.value = savedProgress.answers
+    isAnswerSubmitted.value = savedProgress.isAnswerSubmitted
+    isAnswerCorrect.value = savedProgress.isAnswerCorrect
+    selectedAnswers.value = savedProgress.selectedAnswers
+
+    console.log('Restored quiz progress:', savedProgress)
+  }
+}
+
+const saveProgress = () => {
+  if (!quiz.value) return
+
+  const progress = {
+    currentQuestionIndex: currentQuestionIndex.value,
+    answers: answers.value,
+    isAnswerSubmitted: isAnswerSubmitted.value,
+    isAnswerCorrect: isAnswerCorrect.value,
+    selectedAnswers: selectedAnswers.value,
+  }
+
+  saveQuizProgress(props.quizId, progress)
 }
 
 const nextQuestion = () => {
@@ -237,9 +279,24 @@ const finishQuiz = () => {
   }
 
   saveToStorage(`quiz_result_${props.quizId}`, JSON.stringify(result))
+
+  // Clear saved progress when quiz is finished
+  removeQuizProgress(props.quizId)
+
   cleanupTimer()
   emit('finish')
 }
+
+// Watch for changes in selected answers and save progress
+watch(
+  selectedAnswers,
+  () => {
+    if (quiz.value) {
+      saveProgress()
+    }
+  },
+  { deep: true }
+)
 
 watch(formattedTime, () => {
   if (isTimeUp()) {

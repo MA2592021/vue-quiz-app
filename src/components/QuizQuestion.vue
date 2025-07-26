@@ -1,12 +1,14 @@
 <template>
   <div v-if="currentQuestion" class="mb-6">
     <div class="d-flex justify-space-between align-center">
-      <h2
-        class="text-h5 text-sm-h4 font-weight-bold mb-4"
-        style="max-width: 85%"
-      >
-        {{ currentQuestion.question }}
-      </h2>
+      <div style="max-width: 85%">
+        <h2 class="text-h5 text-sm-h4 font-weight-bold mb-4">
+          {{ currentQuestion.question }}
+        </h2>
+        <span v-if="isMultipleChoiceQuestion" class="text-caption">
+          {{ t('select-multiple-answers') }}
+        </span>
+      </div>
       <v-chip
         :color="getDifficultyColor(currentQuestion.difficulty)"
         size="small"

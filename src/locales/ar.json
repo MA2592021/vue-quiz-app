@@ -44,5 +44,6 @@
   "finish-quiz": "إنهاء الاختبار",
   "question": "السؤال",
   "time-remaining": "الوقت المتبقي",
-  "of": "من أصل"
+  "of": "من أصل",
+  "select-multiple-answers": "اختر أكثر من إجابة"
 }

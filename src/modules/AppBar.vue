@@ -1,7 +1,7 @@
 <template>
   <v-app-bar :elevation="2" style="padding-inline: 10px" rounded>
     <template v-slot:prepend>
-      <v-icon>mdi-frequently-asked-questions</v-icon>
+      <v-icon @click="goHome">mdi-frequently-asked-questions</v-icon>
     </template>
 
     <v-app-bar-title>{{ t('quiz-master') }}</v-app-bar-title>
@@ -31,7 +31,16 @@ import { ref } from 'vue'
 import ThemeSwitch from '../components/ThemeSwitch.vue'
 import LanguageSwitch from '../components/LanguageSwitch.vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 const dialog = ref(false)
 const { t } = useI18n()
+const router = useRouter()
+
+const goHome = () => {
+  if (router.currentRoute.value.path === '/') {
+    return
+  }
+  router.push('/')
+}
 </script>

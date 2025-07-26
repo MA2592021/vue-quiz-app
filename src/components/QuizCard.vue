@@ -1,5 +1,5 @@
 <template>
-  <v-card class="quiz-card h-100" hover>
+  <v-card class="quiz-card h-100">
     <v-card-title
       class="d-flex justify-space-between align-center pa-3 pa-sm-4"
     >
@@ -82,7 +82,6 @@ const truncateTitle = (title: string) => {
 <style scoped>
 .quiz-card {
   transition: transform 0.2s ease-in-out;
-  cursor: pointer;
   height: 100%;
   display: flex;
   flex-direction: column;

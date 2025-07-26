@@ -4,7 +4,7 @@
     id="navigation-buttons"
   >
     <v-btn
-      :disabled="isFirstQuestion"
+      :disabled="isFirstQuestion || isQuizOver"
       @click="() => emit('previous')"
       variant="outlined"
       size="large"
@@ -16,7 +16,7 @@
     <div class="d-flex gap-3">
       <v-btn
         v-if="!isAnswerSubmitted"
-        :disabled="!isAnswerSelected"
+        :disabled="!isAnswerSelected || isQuizOver"
         @click="() => emit('submit')"
         color="primary"
         size="large"
@@ -27,6 +27,7 @@
 
       <v-btn
         v-else-if="isNotLastQuestion"
+        :disabled="isQuizOver"
         @click="() => emit('next')"
         color="primary"
         size="large"
@@ -35,7 +36,13 @@
         <v-icon right>mdi-arrow-right</v-icon>
       </v-btn>
 
-      <v-btn v-else @click="() => emit('finish')" color="success" size="large">
+      <v-btn
+        v-else
+        :disabled="isQuizOver"
+        @click="() => emit('finish')"
+        color="success"
+        size="large"
+      >
         Finish Quiz
         <v-icon right>mdi-check</v-icon>
       </v-btn>
@@ -49,6 +56,7 @@ defineProps<{
   isAnswerSubmitted: boolean
   isAnswerSelected: boolean
   isNotLastQuestion: boolean
+  isQuizOver: boolean
 }>()
 const emit = defineEmits<{
   (_e: 'previous'): void

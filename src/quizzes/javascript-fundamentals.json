@@ -11,7 +11,8 @@
       "question": "Which keyword is used to declare a constant in JavaScript?",
       "options": ["var", "let", "const", "define"],
       "correctAnswers": [2],
-      "difficulty": "easy"
+      "difficulty": "beginner",
+      "explanation": "The `const` keyword is used to declare a constant in JavaScript. It is similar to `let`, but the value of a constant cannot be changed after it is declared."
     },
     {
       "id": 2,
@@ -19,7 +20,8 @@
       "question": "What is the result of `typeof NaN`?",
       "options": ["number", "NaN", "undefined", "object"],
       "correctAnswers": [0],
-      "difficulty": "medium"
+      "difficulty": "intermediate",
+      "explanation": "The `typeof NaN` is `number`. NaN is a special value in JavaScript that represents a value that is not a number."
     },
     {
       "id": 3,
@@ -27,7 +29,8 @@
       "question": "Which of the following are primitive data types in JavaScript?",
       "options": ["String", "Object", "Number", "Boolean"],
       "correctAnswers": [0, 2, 3],
-      "difficulty": "medium"
+      "difficulty": "intermediate",
+      "explanation": "The `String`, `Number`, and `Boolean` are primitive data types in JavaScript. They are not objects."
     },
     {
       "id": 4,
@@ -40,7 +43,8 @@
         "Format a number to a string"
       ],
       "correctAnswers": [2],
-      "difficulty": "easy"
+      "difficulty": "beginner",
+      "explanation": "The `JSON.stringify()` is used to convert a JavaScript object to a JSON string."
     },
     {
       "id": 5,
@@ -48,7 +52,8 @@
       "question": "Which array methods do not modify the original array?",
       "options": ["map()", "filter()", "push()", "slice()"],
       "correctAnswers": [0, 1, 3],
-      "difficulty": "hard"
+      "difficulty": "advanced",
+      "explanation": "The `map()`, `filter()`, and `slice()` are array methods that do not modify the original array."
     },
     {
       "id": 6,
@@ -56,7 +61,8 @@
       "question": "What is the output of `typeof null` in JavaScript?",
       "options": ["null", "undefined", "object", "function"],
       "correctAnswers": [2],
-      "difficulty": "medium"
+      "difficulty": "intermediate",
+      "explanation": "The `typeof null` is `object`. Null is a special value in JavaScript that represents a value that is not an object."
     },
     {
       "id": 7,
@@ -64,7 +70,8 @@
       "question": "Which method can be used to convert a string to an integer?",
       "options": ["Number()", "parseInt()", "parseFloat()", "toInteger()"],
       "correctAnswers": [1],
-      "difficulty": "easy"
+      "difficulty": "beginner",
+      "explanation": "The `parseInt()` is used to convert a string to an integer."
     },
     {
       "id": 8,
@@ -72,7 +79,8 @@
       "question": "Which of these values are falsy in JavaScript?",
       "options": ["0", "false", "null", "All of the above"],
       "correctAnswers": [3],
-      "difficulty": "easy"
+      "difficulty": "beginner",
+      "explanation": "The `0`, `false`, and `null` are falsy values in JavaScript."
     }
   ]
 }

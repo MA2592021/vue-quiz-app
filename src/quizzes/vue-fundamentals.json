@@ -16,7 +16,8 @@
         "<% message %>"
       ],
       "correctAnswers": [0],
-      "difficulty": "easy"
+      "difficulty": "beginner",
+      "explanation": "The `{{ message }}` syntax is used for data binding in Vue templates."
     },
     {
       "type": "single",
@@ -24,7 +25,8 @@
       "question": "Which directive is used to conditionally render an element in Vue?",
       "options": ["v-if", "v-show", "v-model", "v-bind"],
       "correctAnswers": [0],
-      "difficulty": "easy"
+      "difficulty": "beginner",
+      "explanation": "The `v-if` directive is used to conditionally render an element in Vue."
     },
     {
       "id": 3,
@@ -32,7 +34,8 @@
       "question": "Which of the following are Vue 3 composition API features?",
       "options": ["ref()", "reactive()", "data()", "computed()"],
       "correctAnswers": [0, 1, 3],
-      "difficulty": "medium"
+      "difficulty": "intermediate",
+      "explanation": "The `ref()`, `reactive()`, and `computed()` are composition API features in Vue 3."
     },
     {
       "id": 4,
@@ -40,7 +43,8 @@
       "question": "Which directive is used for two-way binding in Vue?",
       "options": ["v-if", "v-on", "v-bind", "v-model"],
       "correctAnswers": [3],
-      "difficulty": "easy"
+      "difficulty": "beginner",
+      "explanation": "The `v-model` directive is used for two-way binding in Vue."
     },
     {
       "id": 5,
@@ -53,7 +57,8 @@
         "Mounts the component to the DOM"
       ],
       "correctAnswers": [2],
-      "difficulty": "medium"
+      "difficulty": "intermediate",
+      "explanation": "The `setup()` function in Vue 3 initializes reactive state and composition functions."
     },
     {
       "id": 6,
@@ -61,7 +66,8 @@
       "question": "Which lifecycle hooks are available in the Vue 3 Composition API?",
       "options": ["onMounted", "onUpdated", "created", "onUnmounted"],
       "correctAnswers": [0, 1, 3],
-      "difficulty": "medium"
+      "difficulty": "intermediate",
+      "explanation": "The `onMounted`, `onUpdated`, and `onUnmounted` are lifecycle hooks in the Vue 3 Composition API."
     },
     {
       "id": 7,
@@ -69,7 +75,8 @@
       "question": "Which directive is used to loop over items in Vue templates?",
       "options": ["v-if", "v-for", "v-loop", "v-each"],
       "correctAnswers": [1],
-      "difficulty": "easy"
+      "difficulty": "beginner",
+      "explanation": "The `v-for` directive is used to loop over items in Vue templates."
     },
     {
       "id": 8,
@@ -82,7 +89,8 @@
         "Register a global component"
       ],
       "correctAnswers": [2],
-      "difficulty": "medium"
+      "difficulty": "intermediate",
+      "explanation": "The `emit` is used to trigger parent component events in Vue components."
     }
   ]
 }

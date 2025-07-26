@@ -1,14 +1,26 @@
 <template>
   <div v-if="currentQuestion" class="mb-6">
-    <h2 class="text-h5 text-sm-h4 font-weight-bold mb-4">
-      {{ currentQuestion.question }}
-    </h2>
+    <div class="d-flex justify-space-between align-center">
+      <h2
+        class="text-h5 text-sm-h4 font-weight-bold mb-4"
+        style="max-width: 85%"
+      >
+        {{ currentQuestion.question }}
+      </h2>
+      <v-chip
+        :color="getDifficultyColor(currentQuestion.difficulty)"
+        size="small"
+        class="text-caption"
+      >
+        {{ t(`difficulty-${currentQuestion.difficulty}`) }}
+      </v-chip>
+    </div>
 
     <!-- Single Choice -->
     <v-radio-group
       v-if="isSingleChoiceQuestion"
-      v-model="selectedAnswer"
-      :disabled="isAnswerSubmitted"
+      v-model="singleChoiceValue"
+      :disabled="isAnswerSubmitted || isQuizOver"
     >
       <v-radio
         v-for="(option, index) in currentQuestionOptions"
@@ -18,7 +30,6 @@
         class="mb-3"
         :color="getOptionState(index).color"
         :class="getOptionState(index).classes"
-        @click="emit('singleChoiceAnswer', index)"
       >
         <template v-slot:label>
           <span :class="getOptionState(index).textClasses">
@@ -35,13 +46,11 @@
         :key="index"
         :label="option"
         :model-value="isOptionSelected(index)"
-        @update:model-value="
-          (checked) => emit('multipleChoiceAnswer', index, checked || false)
-        "
+        @update:model-value="(checked) => toggleAnswer(index, checked)"
         :color="getOptionState(index).color"
         :class="getOptionState(index).classes"
         class="mb-1"
-        :disabled="isAnswerSubmitted"
+        :disabled="isAnswerSubmitted || isQuizOver"
         density="compact"
       >
         <template v-slot:label>
@@ -57,6 +66,10 @@
 <script setup lang="ts">
 import type { Question } from '@/types/quiz'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { getDifficultyColor } from '@/utils/quiz'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   currentQuestion: Question
@@ -64,17 +77,22 @@ const props = defineProps<{
   isMultipleChoiceQuestion: boolean
   isAnswerSubmitted: boolean
   currentQuestionOptions: string[]
+  isQuizOver: boolean
 }>()
 
-const selectedAnswer = defineModel<number>('selectedAnswer')
-const selectedAnswers = defineModel<number[]>('selectedAnswers')
-
-const emit = defineEmits<{
-  (_e: 'singleChoiceAnswer', _index: number): void
-  (_e: 'multipleChoiceAnswer', _index: number, _checked: boolean): void
-}>()
+const selectedAnswers =
+  defineModel<Question['correctAnswers']>('selectedAnswers')
 
 const isSingleChoice = computed(() => props.currentQuestion?.type === 'single')
+
+// Computed property for single choice radio group binding
+const singleChoiceValue = computed({
+  get: () => selectedAnswers.value?.[0] ?? null,
+  set: (val) => {
+    if (props.isAnswerSubmitted || props.isQuizOver) return
+    selectedAnswers.value = val !== null ? [val] : []
+  },
+})
 
 const getOptionState = (index: number) => {
   if (!props.isAnswerSubmitted) {
@@ -87,7 +105,7 @@ const getOptionState = (index: number) => {
 
   const isCorrect = props.currentQuestion?.correctAnswers.includes(index)
   const isSelected = isSingleChoice.value
-    ? selectedAnswer.value === index
+    ? selectedAnswers.value?.includes(index) || false
     : selectedAnswers.value?.includes(index) || false
 
   return {
@@ -111,6 +129,18 @@ const getOptionState = (index: number) => {
 
 const isOptionSelected = (index: number) => {
   return selectedAnswers.value?.includes(index) || false
+}
+
+const toggleAnswer = (index: number, checked: boolean | null) => {
+  if (props.isAnswerSubmitted || props.isQuizOver) return
+
+  if (checked) {
+    if (!selectedAnswers.value?.includes(index)) {
+      selectedAnswers.value?.push(index)
+    }
+  } else {
+    selectedAnswers.value = selectedAnswers.value?.filter((i) => i !== index)
+  }
 }
 </script>
 

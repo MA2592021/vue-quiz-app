@@ -30,7 +30,7 @@ export interface Question {
   options: string[]
   correctAnswers: number[]
   explanation: string
-  difficulty?: string
+  difficulty: string
 }
 
 export interface QuizResult {

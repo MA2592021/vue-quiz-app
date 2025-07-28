@@ -68,5 +68,9 @@
   "go-home": "Go to Home",
   "go-home-hint": "Go to Home (H)",
   "settings-hint": "Settings (S)",
-  "keyboard-shortcuts-help": "Keyboard Shortcuts Help (0 for help)"
+  "keyboard-shortcuts-help": "Keyboard Shortcuts Help (0 for help)",
+  "page-not-found": "404 - Page Not Found",
+  "page-not-found-message": "Sorry, the page you are looking for does not exist.",
+  "page-not-found-instruction": "Please check the URL or return to the homepage.",
+  "go-to-home": "Go to Home"
 }
